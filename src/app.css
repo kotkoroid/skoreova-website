@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+
+@font-face {
+	font-family: "SplineSansMono";
+	src: url("/fonts/SplineSansMono.ttf") format("truetype");
+	font-display: swap;
+}

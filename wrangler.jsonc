@@ -1,0 +1,22 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "skoreova-website",
+	"main": "./.svelte-kit/cloudflare/_worker.js",
+	"compatibility_date": "2025-07-11",
+	"compatibility_flags": ["nodejs_compat"],
+	"observability": {
+		"enabled": true,
+		"head_sampling_rate": 1
+	},
+	"preview_urls": false,
+	"routes": [
+    {
+      "pattern": "skoreova.cz",
+      "custom_domain": true
+    }
+  ],
+	"assets": {
+		"binding": "ASSETS",
+		"directory": "./.svelte-kit/cloudflare"
+	}
+}
