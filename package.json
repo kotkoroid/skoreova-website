@@ -1,25 +1,28 @@
 {
-	"name": "skoreova-website",
-	"private": true,
-	"version": "0.0.0",
-	"type": "module",
-	"scripts": {
-	  "prepare": "svelte-kit sync || echo ''",
-		"dev": "vite dev",
-		"preview": "vite build && wrangler dev",
-		"types": "wrangler types",
-		"typecheck": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
-	},
-	"devDependencies": {
-	    "@sveltejs/adapter-cloudflare": "^7.0.5",
-		"@sveltejs/kit": "^2.22.5",
-		"@sveltejs/vite-plugin-svelte": "^6.0.0",
-		"@tailwindcss/vite": "^4.1.11",
-		"svelte": "^5.35.6",
-		"svelte-check": "^4.2.2",
-		"tailwindcss": "^4.1.11",
-		"typescript": "^5.8.3",
-		"vite": "^7.0.4",
-		"wrangler": "^4.24.3"
-	}
+  "name": "skoreova-website",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "prepare": "svelte-kit sync || echo ''",
+    "dev": "vite dev",
+    "preview": "vite build && wrangler dev",
+    "types": "wrangler types",
+    "typecheck": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-cloudflare": "^7.2.3",
+    "@sveltejs/kit": "^2.37.0",
+    "@sveltejs/vite-plugin-svelte": "^6.1.3",
+    "@tailwindcss/vite": "^4.1.12",
+    "svelte": "^5.38.6",
+    "svelte-check": "^4.3.1",
+    "tailwindcss": "^4.1.12",
+    "typescript": "^5.8.3",
+    "vite": "^7.1.4",
+    "wrangler": "^4.33.1"
+  },
+  "trustedDependencies": [
+    "@tailwindcss/oxide"
+  ]
 }
