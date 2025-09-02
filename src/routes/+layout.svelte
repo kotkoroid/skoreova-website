@@ -2,12 +2,9 @@
 import "../app.css";
 import { browser } from "$app/environment";
 import { page } from "$app/state";
+import { isMobileMenuOpen } from "$lib/stores.js";
 
 const { children } = $props();
-
-let isMobileMenuOpen = $state(false);
-let isDarkMode = $state(false);
-
 let mouseX = $state(0);
 let mouseY = $state(0);
 let targetX = $state(0);
@@ -15,33 +12,14 @@ let targetY = $state(0);
 
 $effect(() => {
 	if (browser) {
-		const storedDarkMode = localStorage.getItem("darkMode");
-		const prefersDark = window.matchMedia(
-			"(prefers-color-scheme: dark)",
-		).matches;
-
-		isDarkMode = storedDarkMode === "true" || (!storedDarkMode && prefersDark);
-	}
-});
-
-$effect(() => {
-	if (browser) {
-      isDarkMode ? document.documentElement.classList.add("dark") : document.documentElement.classList.remove("dark")
+		document.documentElement.classList.add("dark");
 	}
 });
 
 const isHomepage = $derived(page.url.pathname === "/");
 
 function toggleMobileMenu() {
-	isMobileMenuOpen = !isMobileMenuOpen;
-}
-
-function toggleDarkMode() {
-	isDarkMode = !isDarkMode;
-
-	if (browser) {
-		localStorage.setItem("darkMode", isDarkMode.toString());
-	}
+	isMobileMenuOpen.update(open => !open);
 }
 
 function handleMouseMove(event: MouseEvent) {
@@ -63,108 +41,85 @@ if (typeof window !== "undefined") {
 </script>
 
 {#if isHomepage}
-  <!-- Homepage Layout: Header + Full Width Content + Footer -->
-  <!-- Header -->
-  <header class="bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-16">
-        <div class="flex items-center space-x-3">
-          <!-- Logo placeholder -->
-          <a href="/" class="flex items-center">
-            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <!-- Replace this div with your SVG logo -->
-              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-              </svg>
-            </div>
-          </a>
-          <!-- Header text as link -->
-          <a href="/" class="text-xl font-semibold text-gray-900 dark:text-white hover:text-blue-600 transition-colors">
-            Skóreová
-          </a>
-        </div>
+  <!-- Homepage Layout: Overlay Header + Full Width Content + Footer -->
+  <div class="relative">
+    <!-- Header - Sticky positioned to overlay content -->
+    <header class="sticky top-0 backdrop-blur-sm shadow-sm z-50 mb-[-4rem]" style="background-color: rgba(17, 24, 39, 0.8);">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center space-x-3">
+            <!-- Logo placeholder -->
+            <a href="/" class="flex items-center">
+              <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <!-- Replace this div with your SVG logo -->
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+              </div>
+            </a>
+            <!-- Header text as link -->
+            <a href="/" class="text-xl font-semibold text-white hover:text-blue-400 transition-colors">
+              Skóreová
+            </a>
+          </div>
 
-        <!-- Desktop Navigation -->
-        <nav class="hidden md:flex space-x-8">
-          <a href="/articles" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium">Články</a>
-          <a href="/about" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium">Hráčky</a>
-          <a href="/results" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium">Výsledky</a>
-          <a href="/contact" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium">Kontakt</a>
-        </nav>
+          <!-- Desktop Navigation -->
+          <nav class="hidden md:flex space-x-8">
+            <a href="/articles" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Články</a>
+            <a href="/about" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Hráčky</a>
+            <a href="/results" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Výsledky</a>
+            <a href="/contact" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Kontakt</a>
+          </nav>
 
-        <!-- Dark Mode Toggle & Social Icons -->
-        <div class="flex items-center space-x-4">
-          <!-- Dark Mode Toggle -->
-          <button
-            onclick={toggleDarkMode}
-            class="p-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-            aria-label="Toggle dark mode"
-          >
-            {#if isDarkMode}
-              <!-- Sun icon for light mode -->
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-              </svg>
-            {:else}
-              <!-- Moon icon for dark mode -->
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-              </svg>
-            {/if}
-          </button>
+          <!-- Social Icons -->
+          <div class="flex items-center space-x-4">
 
-          <a href="https://x.com" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 p-2" aria-label="X (Twitter)">
-            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-          </a>
-          <a href="https://threads.net" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 p-2" aria-label="Threads">
-            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M21.86 12.48c-.03-.8-.05-1.89-.05-1.89s-.02-2.42-.49-3.48c-.27-.62-.67-1.18-1.18-1.61-.51-.43-1.13-.73-1.8-.87-1.06-.47-3.48-.49-3.48-.49s-1.09-.02-1.89-.05c-.8.03-1.89.05-1.89.05s-2.42.02-3.48.49c-.67.14-1.29.44-1.8.87-.51.43-.91.99-1.18 1.61-.47 1.06-.49 3.48-.49 3.48s-.02 1.09-.05 1.89c.03.8.05 1.89.05 1.89s.02 2.42.49 3.48c.27.62.67 1.18 1.18 1.61.51.43 1.13.73 1.8.87 1.06.47 3.48.49 3.48.49s1.09.02 1.89.05c.8-.03 1.89-.05 1.89-.05s2.42-.02 3.48-.49c.67-.14 1.29-.44 1.8-.87.51-.43.91-.99 1.18-1.61.47-1.06.49-3.48.49-3.48s.02-1.09.05-1.89zM9.93 15.65V8.35l5.77 3.65-5.77 3.65z"/>
-            </svg>
-          </a>
-        </div>
+            <a href="https://x.com" class="text-white/90 hover:text-blue-400 p-2" aria-label="X (Twitter)">
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+            <a href="https://threads.net" class="text-white/90 hover:text-blue-400 p-2" aria-label="Threads">
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 192 192">
+                <path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6116 63.5383 90.6052 61.6848 97.2286 61.6848C97.3051 61.6848 97.3819 61.6848 97.4576 61.6855C105.707 61.7381 111.932 64.1366 115.961 68.814C118.893 72.2193 120.854 76.925 121.825 82.8638C114.511 81.6207 106.601 81.2385 98.145 81.7233C74.3247 83.0954 59.0111 96.9879 60.0396 116.292C60.5615 126.084 65.4397 134.508 73.775 140.011C80.8224 144.663 89.899 146.938 99.3323 146.423C111.79 145.74 121.563 140.987 128.381 132.296C133.559 125.696 136.834 117.143 138.28 106.366C144.217 109.949 148.617 114.664 151.047 120.332C155.179 129.967 155.42 145.8 142.501 158.708C131.182 170.016 117.576 174.908 97.0135 175.059C74.2042 175.252 56.9538 167.58 46.7381 151.045C38.746 138.182 36.1138 120.37 39.2777 99.2963C43.5655 69.8061 63.6651 47.5572 97.2374 44.8323C97.3355 44.8323 97.4336 44.8323 97.5317 44.8323C140.035 44.8323 149.49 86.4426 141.537 88.9883Z"/>
+              </svg>
+            </a>
+          </div>
 
-        <!-- Mobile menu button -->
-        <div class="md:hidden ml-4">
-          <button
-            onclick={toggleMobileMenu}
-            class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:text-gray-900 dark:focus:text-white p-2"
-            aria-label="Toggle menu"
-          >
-            {#if isMobileMenuOpen}
-              <!-- X icon -->
-              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            {:else}
-              <!-- Hamburger icon -->
-              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            {/if}
-          </button>
+          <!-- Mobile menu button -->
+          <div class="md:hidden ml-4">
+            <button
+              onclick={toggleMobileMenu}
+              class="text-white/90 hover:text-white focus:outline-none focus:text-white p-2 relative"
+              aria-label="Toggle menu"
+            >
+              <!-- Animated hamburger icon -->
+              <div class="w-6 h-6 relative">
+                <span class="absolute left-0 top-1 w-full h-0.5 bg-current transform transition-all duration-300 ease-in-out {$isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}"></span>
+                <span class="absolute left-0 top-3 w-full h-0.5 bg-current transition-all duration-300 ease-in-out {$isMobileMenuOpen ? 'opacity-0' : 'opacity-100'}"></span>
+                <span class="absolute left-0 top-5 w-full h-0.5 bg-current transform transition-all duration-300 ease-in-out {$isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}"></span>
+              </div>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Mobile Navigation Menu -->
-    {#if isMobileMenuOpen}
-      <div class="md:hidden border-t border-gray-200 dark:border-gray-700">
-        <nav class="px-4 pt-2 pb-4 space-y-1 bg-white dark:bg-gray-900">
-          <a href="/" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md text-sm font-medium">Články</a>
-          <a href="/about" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md text-sm font-medium">Hráčky</a>
-          <a href="/services" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md text-sm font-medium">Něco</a>
-          <a href="/contact" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md text-sm font-medium">Kontakt</a>
+      <!-- Mobile Navigation Menu -->
+      <div class="md:hidden absolute top-16 left-0 right-0 z-40 transition-all duration-300 ease-in-out backdrop-blur-sm {$isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}" style="background-color: rgba(17, 24, 39, 0.8);">
+        <nav class="px-4 pt-2 pb-4 space-y-1">
+          <a href="/" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Články</a>
+          <a href="/about" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Hráčky</a>
+          <a href="/results" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Výsledky</a>
+          <a href="/contact" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Kontakt</a>
         </nav>
       </div>
-    {/if}
-  </header>
+    </header>
 
-  <!-- Full Width Homepage Content -->
-  <main class="w-full">
-    {@render children()}
-  </main>
+    <!-- Full Width Homepage Content -->
+    <main class="w-full">
+      {@render children()}
+    </main>
+  </div>
 
   <!-- Footer -->
   <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-6 mt-12">
@@ -187,8 +142,8 @@ if (typeof window !== "undefined") {
   >
     <div class="min-h-screen relative z-10">
       <!-- Header -->
-      <header class="bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header class="backdrop-blur-sm shadow-sm sticky top-0 z-50" style="background-color: rgba(17, 24, 39, 0.8);">
+        <div class="max-w-7xl mx-auto px-6">
           <div class="flex justify-between items-center h-16">
             <div class="flex items-center space-x-3">
               <!-- Logo placeholder -->
@@ -201,48 +156,29 @@ if (typeof window !== "undefined") {
                 </div>
               </a>
               <!-- Header text as link -->
-              <a href="/" class="text-xl font-semibold text-gray-900 dark:text-white hover:text-blue-600 transition-colors">
+              <a href="/" class="text-xl font-semibold text-white hover:text-blue-400 transition-colors">
                 Skóreová
               </a>
             </div>
 
             <!-- Desktop Navigation -->
             <nav class="hidden md:flex space-x-8">
-              <a href="/" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium">Články</a>
-              <a href="/about" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium">Hráčky</a>
-              <a href="/services" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium">Něco</a>
-              <a href="/contact" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium">Kontakt</a>
+              <a href="/" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Články</a>
+              <a href="/database" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Hráčky</a>
+              <a href="/results" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Výsledky</a>
+              <a href="/contact" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Kontakt</a>
             </nav>
 
-            <!-- Dark Mode Toggle & Social Icons -->
+            <!-- Social Icons -->
             <div class="flex items-center space-x-4">
-              <!-- Dark Mode Toggle -->
-              <button
-                onclick={toggleDarkMode}
-                class="p-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                aria-label="Toggle dark mode"
-              >
-                {#if isDarkMode}
-                  <!-- Sun icon for light mode -->
-                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-                  </svg>
-                {:else}
-                  <!-- Moon icon for dark mode -->
-                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-                  </svg>
-                {/if}
-              </button>
-
-              <a href="https://x.com" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 p-2" aria-label="X (Twitter)">
+              <a href="https://x.com" class="text-white/90 hover:text-blue-400 p-2" aria-label="X (Twitter)">
                 <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                 </svg>
               </a>
-              <a href="https://threads.net" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 p-2" aria-label="Threads">
-                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M21.86 12.48c-.03-.8-.05-1.89-.05-1.89s-.02-2.42-.49-3.48c-.27-.62-.67-1.18-1.18-1.61-.51-.43-1.13-.73-1.8-.87-1.06-.47-3.48-.49-3.48-.49s-1.09-.02-1.89-.05c-.8.03-1.89.05-1.89.05s-2.42.02-3.48.49c-.67.14-1.29.44-1.8.87-.51.43-.91.99-1.18 1.61-.47 1.06-.49 3.48-.49 3.48s-.02 1.09-.05 1.89c.03.8.05 1.89.05 1.89s.02 2.42.49 3.48c.27.62.67 1.18 1.18 1.61.51.43 1.13.73 1.8.87 1.06.47 3.48.49 3.48.49s1.09.02 1.89.05c.8-.03 1.89-.05 1.89-.05s2.42-.02 3.48-.49c.67-.14 1.29-.44 1.8-.87.51-.43.91-.99 1.18-1.61.47-1.06.49-3.48.49-3.48s.02-1.09.05-1.89zM9.93 15.65V8.35l5.77 3.65-5.77 3.65z"/>
+              <a href="https://threads.net" class="text-white/90 hover:text-blue-400 p-2" aria-label="Threads">
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 192 192">
+                  <path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6116 63.5383 90.6052 61.6848 97.2286 61.6848C97.3051 61.6848 97.3819 61.6848 97.4576 61.6855C105.707 61.7381 111.932 64.1366 115.961 68.814C118.893 72.2193 120.854 76.925 121.825 82.8638C114.511 81.6207 106.601 81.2385 98.145 81.7233C74.3247 83.0954 59.0111 96.9879 60.0396 116.292C60.5615 126.084 65.4397 134.508 73.775 140.011C80.8224 144.663 89.899 146.938 99.3323 146.423C111.79 145.74 121.563 140.987 128.381 132.296C133.559 125.696 136.834 117.143 138.28 106.366C144.217 109.949 148.617 114.664 151.047 120.332C155.179 129.967 155.42 145.8 142.501 158.708C131.182 170.016 117.576 174.908 97.0135 175.059C74.2042 175.252 56.9538 167.58 46.7381 151.045C38.746 138.182 36.1138 120.37 39.2777 99.2963C43.5655 69.8061 63.6651 47.5572 97.2374 44.8323C97.3355 44.8323 97.4336 44.8323 97.5317 44.8323C140.035 44.8323 149.49 86.4426 141.537 88.9883Z"/>
                 </svg>
               </a>
             </div>
@@ -251,36 +187,29 @@ if (typeof window !== "undefined") {
             <div class="md:hidden ml-4">
               <button
                 onclick={toggleMobileMenu}
-                class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:text-gray-900 dark:focus:text-white p-2"
+                class="text-white/90 hover:text-white focus:outline-none focus:text-white p-2 relative"
                 aria-label="Toggle menu"
               >
-                {#if isMobileMenuOpen}
-                  <!-- X icon -->
-                  <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                {:else}
-                  <!-- Hamburger icon -->
-                  <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                {/if}
+                <!-- Animated hamburger icon -->
+                <div class="w-6 h-6 relative">
+                  <span class="absolute left-0 top-1 w-full h-0.5 bg-current transform transition-all duration-300 ease-in-out {$isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}"></span>
+                  <span class="absolute left-0 top-3 w-full h-0.5 bg-current transition-all duration-300 ease-in-out {$isMobileMenuOpen ? 'opacity-0' : 'opacity-100'}"></span>
+                  <span class="absolute left-0 top-5 w-full h-0.5 bg-current transform transition-all duration-300 ease-in-out {$isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}"></span>
+                </div>
               </button>
             </div>
           </div>
         </div>
 
         <!-- Mobile Navigation Menu -->
-        {#if isMobileMenuOpen}
-          <div class="md:hidden border-t border-gray-200 dark:border-gray-700">
-            <nav class="px-4 pt-2 pb-4 space-y-1 bg-white dark:bg-gray-900">
-              <a href="/" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md text-sm font-medium">Články</a>
-              <a href="/about" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md text-sm font-medium">Hráčky</a>
-              <a href="/services" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md text-sm font-medium">Něco</a>
-              <a href="/contact" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md text-sm font-medium">Kontakt</a>
-            </nav>
-          </div>
-        {/if}
+        <div class="md:hidden absolute top-16 left-0 right-0 z-40 transition-all duration-300 ease-in-out backdrop-blur-sm {$isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}" style="background-color: rgba(17, 24, 39, 0.8);">
+          <nav class="px-4 pt-2 pb-4 space-y-1">
+            <a href="/" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Články</a>
+            <a href="/about" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Hráčky</a>
+            <a href="/services" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Výsledky</a>
+            <a href="/contact" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Kontakt</a>
+          </nav>
+        </div>
       </header>
 
       <!-- Main container -->

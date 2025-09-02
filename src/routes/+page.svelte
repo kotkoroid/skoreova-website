@@ -1,75 +1,280 @@
-<!-- Three Big Feature Boxes - First Thing Users See -->
-<section class="w-full">
-  <div class="grid grid-cols-1 lg:grid-cols-3">
+<script>
+import { onMount, onDestroy } from 'svelte';
+import { crossfade, fly } from 'svelte/transition';
+import { cubicOut } from 'svelte/easing';
+import { isMobileMenuOpen } from '$lib/stores.js';
 
-    <!-- Feature Box 1: Latest Articles -->
-    <div class="group cursor-pointer relative">
-      <div class="relative h-96 lg:h-[500px] overflow-hidden">
+let currentArticle = 0;
+let autoRotateTimer = null;
+let progressTimer = null;
+let progress = 0;
+let isMobile = false;
+let isTransitioning = false;
+let swipeDirection = 0;
+const ROTATE_INTERVAL = 5000;
+const PROGRESS_UPDATE_INTERVAL = 10;
+
+const [send, receive] = crossfade({
+  duration: 500,
+  easing: cubicOut
+});
+
+const articles = [
+  {
+    image: "/src/lib/Image_1.jpg",
+    alt: "Nejnovější články",
+    title: "DOHRÁNO TŘETÍ KOLO DRUHÉ LIGY",
+    description: "Raptorky se společně s Hradcem Králové ujímají špice ligové tabulky.",
+    hoverColor: "text-blue-300"
+  },
+  {
+    image: "/src/lib/Image_2.jpg",
+    alt: "Profily hráček",
+    title: "ČESKÉ TÝMY LETOS BEZ UWCL",
+    description: "Oba české týmy narazily na přemožitele ve finále druhého předkola.",
+    hoverColor: "text-purple-300"
+  },
+  {
+    image: "/src/lib/Image_3.jpg",
+    alt: "Zápasové reporty",
+    title: "PŘEDEHRÁVKA SEDMÉHO KOLA",
+    description: "Slovácko nadělovalo. FC Praha opět bez vstřelené branky.",
+    hoverColor: "text-green-300"
+  }
+];
+
+function startAutoRotate() {
+  if (autoRotateTimer) clearInterval(autoRotateTimer);
+  if (progressTimer) clearInterval(progressTimer);
+
+  progress = 0;
+
+  // Progress bar animation
+  progressTimer = setInterval(() => {
+    progress += (100 / (ROTATE_INTERVAL / PROGRESS_UPDATE_INTERVAL));
+    if (progress >= 100) {
+      progress = 0;
+      currentArticle = (currentArticle + 1) % articles.length;
+    }
+  }, PROGRESS_UPDATE_INTERVAL);
+}
+
+function stopAutoRotate() {
+  if (autoRotateTimer) {
+    clearInterval(autoRotateTimer);
+    autoRotateTimer = null;
+  }
+  if (progressTimer) {
+    clearInterval(progressTimer);
+    progressTimer = null;
+  }
+  progress = 0;
+}
+
+function goToPrevious() {
+  if (isTransitioning) return;
+  isTransitioning = true;
+  swipeDirection = -1;
+  stopAutoRotate();
+  setTimeout(() => {
+    currentArticle = (currentArticle - 1 + articles.length) % articles.length;
+    swipeDirection = 0;
+    isTransitioning = false;
+    startAutoRotate();
+  }, 150);
+}
+
+function goToNext() {
+  if (isTransitioning) return;
+  isTransitioning = true;
+  swipeDirection = 1;
+  stopAutoRotate();
+  setTimeout(() => {
+    currentArticle = (currentArticle + 1) % articles.length;
+    swipeDirection = 0;
+    isTransitioning = false;
+    startAutoRotate();
+  }, 150);
+}
+
+function goToArticle(index) {
+  if (index !== currentArticle && !isTransitioning) {
+    isTransitioning = true;
+    stopAutoRotate();
+    setTimeout(() => {
+      currentArticle = index;
+      isTransitioning = false;
+      startAutoRotate();
+    }, 150);
+  }
+}
+
+onMount(() => {
+  startAutoRotate();
+  // Check if mobile
+  const checkMobile = () => {
+    isMobile = window.innerWidth < 768;
+  };
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+  
+  return () => {
+    window.removeEventListener('resize', checkMobile);
+  };
+});
+
+onDestroy(() => {
+  stopAutoRotate();
+});
+</script>
+
+<!-- Featured Articles Section -->
+<section class="w-full relative h-[600px] overflow-hidden">
+  <!-- Full Background Image -->
+  {#each articles as article, index (article.title)}
+    {#if index === currentArticle}
+      <div
+        in:fly|global={{ 
+          x: isMobile ? (swipeDirection === 1 ? 300 : swipeDirection === -1 ? -300 : 0) : 0, 
+          duration: 300, 
+          easing: cubicOut 
+        }}
+        out:fly|global={{ 
+          x: isMobile ? (swipeDirection === 1 ? -300 : swipeDirection === -1 ? 300 : 0) : 0, 
+          duration: 300, 
+          easing: cubicOut 
+        }}
+        class="absolute inset-0"
+      >
         <img
-          src="/src/lib/Image_1.jpg"
-          alt="Nejnovější články"
-          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+          src={article.image}
+          alt={article.alt}
+          class="w-full h-full object-cover transition-transform duration-700 {isTransitioning && !isMobile ? 'scale-105' : ''}"
         >
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-        <div class="absolute bottom-0 left-0 right-0 p-8">
-          <div class="h-20 relative mb-4">
-            <h2 class="text-3xl lg:text-4xl font-bold text-white group-hover:text-blue-300 transition-colors uppercase tracking-wide absolute top-0 left-0 right-0">
-                DOHRÁNO TŘETÍ KOLO DRUHÉ LIGY
+        
+        
+        <!-- Progress Bar - Mobile Only, at bottom of image -->
+        {#if isMobile}
+          <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-white/20">
+            <div
+              class="h-full bg-white transition-all duration-75 ease-linear"
+              style="width: {progress}%"
+            ></div>
+          </div>
+        {/if}
+      </div>
+    {/if}
+  {/each}
+
+  <!-- Content Container -->
+  <div class="relative z-10 p-6 pt-20">
+    <div class="flex flex-col md:flex-row gap-6 h-full min-h-[480px]">
+      <!-- Main Article Content Area -->
+      <div class="flex-1 flex flex-col justify-end">
+        <div class="max-w-3xl">
+          <div class="mb-2">
+            <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-white group-hover:{articles[currentArticle].hoverColor} transition-colors uppercase tracking-wide">
+              {articles[currentArticle].title}
             </h2>
           </div>
-          <div class="h-14 relative">
-            <p class="text-white/90 text-lg absolute top-0 left-0 right-0">Raptorky se společně s Hradcem Králové ujímají špice ligové tabulky.</p>
+          <div>
+            <p class="text-white/90 text-base md:text-lg">
+              {articles[currentArticle].description}
+            </p>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Feature Box 2: Player Profiles -->
-    <div class="group cursor-pointer relative">
-      <div class="relative h-96 lg:h-[500px] overflow-hidden">
-        <img
-          src="/src/lib/Image_2.jpg"
-          alt="Profily hráček"
-          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-        >
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-        <div class="absolute bottom-0 left-0 right-0 p-8">
-          <div class="h-20 relative mb-4">
-            <h2 class="text-3xl lg:text-4xl font-bold text-white group-hover:text-purple-300 transition-colors uppercase tracking-wide absolute top-0 left-0 right-0">
-                ČESKÉ TÝMY LETOS BEZ UWCL
-            </h2>
-          </div>
-          <div class="h-14 relative">
-            <p class="text-white/90 text-lg absolute top-0 left-0 right-0">Oba české týmy narazily na přemožitele ve finále druhého předkola.</p>
-          </div>
+      <!-- Sidebar with All Article Previews -->
+      <div class="w-full md:w-80 relative">
+        
+        <!-- Desktop: Show all articles - Always visible on desktop -->
+        <div class="hidden md:flex flex-col gap-3 mt-12">
+          {#each articles as article, index}
+            <div
+              class="group relative overflow-hidden rounded-lg cursor-pointer transition-all duration-300 border-2 border-white/30 {currentArticle === index ? 'border-white' : 'hover:shadow-xl hover:border-white/50'}"
+              onmouseenter={() => goToArticle(index)}
+            >
+              <!-- Full-width Article Image -->
+              <div class="relative h-28">
+                <img
+                  src={article.image}
+                  alt={article.alt}
+                  class="w-full h-full object-cover transition-transform duration-300 {currentArticle === index ? 'scale-105' : 'group-hover:scale-105'}"
+                >
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+
+                <!-- Article Title Overlay -->
+                <div class="absolute bottom-0 left-0 right-0 p-2">
+                  <h3 class="text-sm font-semibold text-white leading-tight overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                    {article.title}
+                  </h3>
+                </div>
+                
+                <!-- Progress Bar for Desktop - Only on current article -->
+                {#if currentArticle === index}
+                  <div class="absolute bottom-0 left-0 w-full h-0.5 bg-white/20">
+                    <div
+                      class="h-full bg-white transition-all duration-75 ease-linear"
+                      style="width: {progress}%"
+                    ></div>
+                  </div>
+                {/if}
+              </div>
+            </div>
+          {/each}
+        </div>
+
+        <!-- View All Articles Button - Desktop Only -->
+        <div class="hidden md:flex justify-center mt-4">
+          <a
+            href="/articles"
+            class="flex items-center justify-center h-12 px-6 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-300 backdrop-blur-sm"
+          >
+Všechny články
+          </a>
         </div>
       </div>
     </div>
-
-    <!-- Feature Box 3: Match Reports -->
-    <div class="group cursor-pointer relative">
-      <div class="relative h-96 lg:h-[500px] overflow-hidden">
-        <img
-          src="/src/lib/Image_3.jpg"
-          alt="Zápasové reporty"
-          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-        >
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-        <div class="absolute bottom-0 left-0 right-0 p-8">
-          <div class="h-20 relative mb-4">
-            <h2 class="text-3xl lg:text-4xl font-bold text-white group-hover:text-green-300 transition-colors uppercase tracking-wide absolute top-0 left-0 right-0">
-                PŘEDEHRÁVKA SEDMÉHO KOLA
-            </h2>
-          </div>
-          <div class="h-14 relative">
-            <p class="text-white/90 text-lg absolute top-0 left-0 right-0">Slovácko nadělovalo. FC Praha opět bez vstřelené branky.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
+  
+
 </section>
+
+<!-- Mobile Navigation Controls - Outside and under the image -->
+<div class="md:hidden py-10 bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 dark:from-gray-950 dark:via-slate-900 dark:to-black transition-all duration-300 ease-in-out">
+  <div class="max-w-4xl mx-auto px-6 transform transition-transform duration-300 ease-in-out">
+      <div class="flex justify-between items-center">
+        <a
+          href="/articles"
+          class="text-white hover:text-gray-200 font-medium transition-colors duration-300 uppercase"
+        >
+          VŠECHNY ČLÁNKY
+        </a>
+        <div class="flex gap-6 items-center">
+          <button 
+            onclick={goToPrevious}
+            class="text-white hover:text-gray-200 font-medium transition-colors duration-300 uppercase {isTransitioning ? 'opacity-50' : ''}"
+            aria-label="PŘEDCHOZÍ"
+            disabled={isTransitioning}
+            title="PŘEDCHOZÍ"
+          >
+            ← PŘEDCHOZÍ
+          </button>
+          <button 
+            onclick={goToNext}
+            class="text-white hover:text-gray-200 font-medium transition-colors duration-300 uppercase {isTransitioning ? 'opacity-50' : ''}"
+            aria-label="DALŠÍ"
+            disabled={isTransitioning}
+            title="DALŠÍ"
+          >
+            DALŠÍ →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <!-- Player Search Section -->
 <section class="relative py-10 bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 dark:from-gray-950 dark:via-slate-900 dark:to-black text-white">
