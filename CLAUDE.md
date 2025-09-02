@@ -12,11 +12,15 @@ This is a SvelteKit website for Skóreová (skoreova.cz), built with:
 
 ## Development Commands
 
+**IMPORTANT**: Always use `bun` instead of `npm` for all package management and script execution in this project.
+
 ### Core Development
 - `bun dev` - Start development server
 - `bun run preview` - Build and preview with Wrangler locally
 - `bun run typecheck` - Type check the entire project
 - `bun run types` - Generate Cloudflare Worker types
+- `bun install` - Install dependencies
+- `bun run build` - Build the project for production
 
 ### Deployment
 - Builds are deployed to Cloudflare Workers

@@ -1,153 +1,185 @@
-<!-- Hero Section with Full Width -->
-<section class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 text-white overflow-hidden">
-  <!-- Background pattern -->
-  <div class="absolute inset-0 opacity-10">
-    <svg width="100%" height="100%" viewBox="0 0 100 100">
-      <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-        <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" stroke-width="0.5"/>
-      </pattern>
-      <rect width="100%" height="100%" fill="url(#grid)" />
-    </svg>
+<!-- Three Big Feature Boxes - First Thing Users See -->
+<section class="w-full">
+  <div class="grid grid-cols-1 lg:grid-cols-3">
+
+    <!-- Feature Box 1: Latest Articles -->
+    <div class="group cursor-pointer relative">
+      <div class="relative h-96 lg:h-[500px] overflow-hidden">
+        <img
+          src="/src/lib/Image_1.jpg"
+          alt="Nejnovější články"
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+        >
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-8">
+          <div class="h-20 relative mb-4">
+            <h2 class="text-3xl lg:text-4xl font-bold text-white group-hover:text-blue-300 transition-colors uppercase tracking-wide absolute top-0 left-0 right-0">
+                DOHRÁNO TŘETÍ KOLO DRUHÉ LIGY
+            </h2>
+          </div>
+          <div class="h-14 relative">
+            <p class="text-white/90 text-lg absolute top-0 left-0 right-0">Raptorky se společně s Hradcem Králové ujímají špice ligové tabulky.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature Box 2: Player Profiles -->
+    <div class="group cursor-pointer relative">
+      <div class="relative h-96 lg:h-[500px] overflow-hidden">
+        <img
+          src="/src/lib/Image_2.jpg"
+          alt="Profily hráček"
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+        >
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-8">
+          <div class="h-20 relative mb-4">
+            <h2 class="text-3xl lg:text-4xl font-bold text-white group-hover:text-purple-300 transition-colors uppercase tracking-wide absolute top-0 left-0 right-0">
+                ČESKÉ TÝMY LETOS BEZ UWCL
+            </h2>
+          </div>
+          <div class="h-14 relative">
+            <p class="text-white/90 text-lg absolute top-0 left-0 right-0">Oba české týmy narazily na přemožitele ve finále druhého předkola.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature Box 3: Match Reports -->
+    <div class="group cursor-pointer relative">
+      <div class="relative h-96 lg:h-[500px] overflow-hidden">
+        <img
+          src="/src/lib/Image_3.jpg"
+          alt="Zápasové reporty"
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+        >
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-8">
+          <div class="h-20 relative mb-4">
+            <h2 class="text-3xl lg:text-4xl font-bold text-white group-hover:text-green-300 transition-colors uppercase tracking-wide absolute top-0 left-0 right-0">
+                PŘEDEHRÁVKA SEDMÉHO KOLA
+            </h2>
+          </div>
+          <div class="h-14 relative">
+            <p class="text-white/90 text-lg absolute top-0 left-0 right-0">Slovácko nadělovalo. FC Praha opět bez vstřelené branky.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
-  
-  <div class="relative z-10 text-center px-6 max-w-6xl mx-auto">
-    <h1 class="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-      Skóreová
-    </h1>
-    <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
-      Váš domov pro nejnovější zprávy ze světa ženského fotbalu
-    </p>
-    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <a href="#articles" class="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all shadow-lg hover:shadow-xl">
-        Nejnovější články
-        <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+</section>
+
+<!-- Player Search Section -->
+<section class="relative py-10 bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 dark:from-gray-950 dark:via-slate-900 dark:to-black text-white">
+  <div class="max-w-4xl mx-auto text-center px-6">
+    <h2 class="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 dark:from-blue-300 dark:via-purple-300 dark:to-pink-300 bg-clip-text text-transparent">
+      Hledáte konkrétní hráčku?
+    </h2>
+
+    <div class="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto mb-8">
+      <div class="flex-1">
+        <input
+          type="text"
+          placeholder="Zadejte jméno..."
+          class="w-full px-6 py-4 text-lg border-2 border-white/20 dark:border-white/10 bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-xl focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-300 focus:border-blue-400 dark:focus:border-blue-300 transition-all text-white placeholder-white/60 dark:placeholder-white/40"
+          onfocus={(e) => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+        >
+      </div>
+      <button class="px-8 py-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl">
+        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
-      </a>
-      <a href="/about" class="inline-flex items-center px-8 py-4 bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 text-white font-medium rounded-xl transition-all">
-        Poznat hráčky
-        <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+        Hledat
+      </button>
+    </div>
+
+    <div>
+      <a
+        href="/about"
+        class="inline-flex items-center px-8 py-4 bg-white/20 dark:bg-white/10 backdrop-blur-sm hover:bg-white/30 dark:hover:bg-white/20 text-white font-medium rounded-xl transition-all border border-white/20 dark:border-white/10"
+      >
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
         </svg>
+        Procházet databázi hráček
       </a>
     </div>
   </div>
 </section>
 
-<!-- Featured Articles Section -->
-<section id="articles" class="py-20 bg-white">
+
+<!-- Quick Stats Section -->
+<section class="py-16 bg-white dark:bg-gray-900">
   <div class="max-w-7xl mx-auto px-6">
-    <div class="text-center mb-16">
-      <h2 class="text-5xl font-bold text-gray-900 mb-4">Hlavní články</h2>
-      <p class="text-xl text-gray-600">Sledujte nejnovější zprávy a analýzy</p>
-    </div>
-    
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- Featured Article -->
-      <article class="lg:col-span-2 group cursor-pointer">
-        <div class="relative overflow-hidden rounded-2xl shadow-xl">
-          <img src="https://via.placeholder.com/800x500/1e293b/ffffff?text=Featured+Article" alt="Featured Article" class="w-full h-96 object-cover group-hover:scale-105 transition-transform duration-700">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-          <div class="absolute bottom-0 p-8 text-white">
-            <span class="bg-blue-600 px-3 py-1 rounded-full text-sm font-medium mb-4 inline-block">Hlavní zpráva</span>
-            <h3 class="text-3xl font-bold mb-3 group-hover:text-blue-400 transition-colors">Historický úspěch v Lize mistrů</h3>
-            <p class="text-gray-200 text-lg mb-4">Naše hráčky dosáhly neuvěřitelného milníku v evropské soutěži...</p>
-            <div class="flex items-center text-sm text-gray-300">
-              <time datetime="2025-08-30">30. srpna 2025</time>
-              <span class="mx-2">•</span>
-              <span>10 min čtení</span>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Side Articles -->
-      <div class="space-y-8">
-        <article class="group cursor-pointer">
-          <div class="relative overflow-hidden rounded-xl">
-            <img src="https://via.placeholder.com/400x250/4f46e5/ffffff?text=Article+2" alt="Article 2" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-            <div class="absolute bottom-0 p-6 text-white">
-              <h3 class="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors">Nová trenérka přebírá tým</h3>
-              <div class="text-sm text-gray-300">
-                <time datetime="2025-08-28">28. srpna 2025</time>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="group cursor-pointer">
-          <div class="relative overflow-hidden rounded-xl">
-            <img src="https://via.placeholder.com/400x250/059669/ffffff?text=Article+3" alt="Article 3" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-            <div class="absolute bottom-0 p-6 text-white">
-              <h3 class="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors">Příprava na novou sezónu</h3>
-              <div class="text-sm text-gray-300">
-                <time datetime="2025-08-26">26. srpna 2025</time>
-              </div>
-            </div>
-          </div>
-        </article>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div class="text-center">
+        <div class="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">156</div>
+        <div class="text-gray-600 dark:text-gray-400">Gólů celkem</div>
       </div>
-    </div>
-
-    <div class="text-center mt-12">
-      <a href="/" class="inline-flex items-center px-8 py-4 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-xl transition-all shadow-lg">
-        Všechny články
-        <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-        </svg>
-      </a>
+      <div class="text-center">
+        <div class="text-4xl font-bold text-purple-600 dark:text-purple-400 mb-2">24</div>
+        <div class="text-gray-600 dark:text-gray-400">Vítězství</div>
+      </div>
+      <div class="text-center">
+        <div class="text-4xl font-bold text-green-600 dark:text-green-400 mb-2">8</div>
+        <div class="text-gray-600 dark:text-gray-400">Reprezentantek</div>
+      </div>
+      <div class="text-center">
+        <div class="text-4xl font-bold text-orange-600 dark:text-orange-400 mb-2">12</div>
+        <div class="text-gray-600 dark:text-gray-400">Národností</div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- Players Teaser Section -->
-<section class="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white relative overflow-hidden">
+<section class="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-700 dark:via-purple-700 dark:to-pink-700 text-white relative overflow-hidden">
   <!-- Background effects -->
-  <div class="absolute inset-0 opacity-20">
-    <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-white rounded-full blur-3xl"></div>
-    <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-300 rounded-full blur-3xl"></div>
+  <div class="absolute inset-0 opacity-20 dark:opacity-10">
+    <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-white dark:bg-gray-200 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-300 dark:bg-blue-400 rounded-full blur-3xl"></div>
   </div>
-  
+
   <div class="relative z-10 max-w-7xl mx-auto px-6">
     <div class="text-center mb-16">
       <h2 class="text-5xl font-bold mb-6">Poznejte naše hvězdy</h2>
-      <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+      <p class="text-xl text-blue-100 dark:text-blue-200 max-w-3xl mx-auto">
         Objevte příběhy talentovaných fotbalistek, jejich úspěchy a cesty k vrcholu
       </p>
     </div>
-    
+
     <!-- Stats Grid -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
       <div class="text-center group">
-        <div class="bg-white/20 backdrop-blur-sm rounded-2xl p-6 group-hover:bg-white/30 transition-all">
+        <div class="bg-white/20 dark:bg-white/10 backdrop-blur-sm rounded-2xl p-6 group-hover:bg-white/30 dark:group-hover:bg-white/20 transition-all">
           <div class="text-4xl font-bold mb-2">45</div>
-          <div class="text-blue-100">Aktivních hráček</div>
+          <div class="text-blue-100 dark:text-blue-200">Aktivních hráček</div>
         </div>
       </div>
       <div class="text-center group">
-        <div class="bg-white/20 backdrop-blur-sm rounded-2xl p-6 group-hover:bg-white/30 transition-all">
+        <div class="bg-white/20 dark:bg-white/10 backdrop-blur-sm rounded-2xl p-6 group-hover:bg-white/30 dark:group-hover:bg-white/20 transition-all">
           <div class="text-4xl font-bold mb-2">12</div>
-          <div class="text-blue-100">Národností</div>
+          <div class="text-blue-100 dark:text-blue-200">Národností</div>
         </div>
       </div>
       <div class="text-center group">
-        <div class="bg-white/20 backdrop-blur-sm rounded-2xl p-6 group-hover:bg-white/30 transition-all">
+        <div class="bg-white/20 dark:bg-white/10 backdrop-blur-sm rounded-2xl p-6 group-hover:bg-white/30 dark:group-hover:bg-white/20 transition-all">
           <div class="text-4xl font-bold mb-2">8</div>
-          <div class="text-blue-100">Reprezentantek</div>
+          <div class="text-blue-100 dark:text-blue-200">Reprezentantek</div>
         </div>
       </div>
       <div class="text-center group">
-        <div class="bg-white/20 backdrop-blur-sm rounded-2xl p-6 group-hover:bg-white/30 transition-all">
+        <div class="bg-white/20 dark:bg-white/10 backdrop-blur-sm rounded-2xl p-6 group-hover:bg-white/30 dark:group-hover:bg-white/20 transition-all">
           <div class="text-4xl font-bold mb-2">156</div>
-          <div class="text-blue-100">Gólů celkem</div>
+          <div class="text-blue-100 dark:text-blue-200">Gólů celkem</div>
         </div>
       </div>
     </div>
 
     <div class="text-center">
-      <a href="/about" class="inline-flex items-center px-10 py-5 bg-white text-gray-900 font-bold text-lg rounded-2xl hover:shadow-2xl transition-all hover:scale-105">
+      <a href="/about" class="inline-flex items-center px-10 py-5 bg-white dark:bg-gray-100 text-gray-900 dark:text-gray-800 font-bold text-lg rounded-2xl hover:shadow-2xl transition-all hover:scale-105">
         Prohlédnout všechny hráčky
         <svg class="ml-3 h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -158,22 +190,22 @@
 </section>
 
 <!-- Newsletter Section -->
-<section class="py-20 bg-gray-50">
+<section class="py-20 bg-gray-50 dark:bg-gray-800">
   <div class="max-w-4xl mx-auto text-center px-6">
-    <h2 class="text-4xl font-bold text-gray-900 mb-6">Zůstaňte v obraze</h2>
-    <p class="text-xl text-gray-600 mb-8">Přihlaste se k odběru novinek a nezmeškejte žádné důležité zprávy</p>
-    
+    <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-6">Zůstaňte v obraze</h2>
+    <p class="text-xl text-gray-600 dark:text-gray-300 mb-8">Přihlaste se k odběru novinek a nezmeškejte žádné důležité zprávy</p>
+
     <div class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
-      <input 
-        type="email" 
-        placeholder="Váš e-mail" 
-        class="flex-1 px-6 py-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+      <input
+        type="email"
+        placeholder="Váš e-mail"
+        class="flex-1 px-6 py-4 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
       >
-      <button class="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors">
+      <button class="px-8 py-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-medium rounded-xl transition-colors">
         Přihlásit se
       </button>
     </div>
-    
-    <p class="text-sm text-gray-500 mt-4">Žádný spam, jen kvalitní obsah o ženském fotbalu</p>
+
+    <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">Žádný spam, jen kvalitní obsah o ženském fotbalu</p>
   </div>
 </section>

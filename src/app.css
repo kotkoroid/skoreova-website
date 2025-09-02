@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@variant dark (:where(.dark) &);
+
 @font-face {
 	font-family: "SplineSansMono";
 	src: url("/fonts/SplineSansMono.ttf") format("truetype");
