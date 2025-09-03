@@ -71,8 +71,8 @@ if (typeof window !== "undefined") {
             <a href="/contact" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Kontakt</a>
           </nav>
 
-          <!-- Social Icons -->
-          <div class="flex items-center space-x-4">
+          <!-- Social Icons - Desktop Only -->
+          <div class="hidden md:flex items-center space-x-4">
 
             <a href="https://x.com" class="text-white/90 hover:text-blue-400 p-2" aria-label="X (Twitter)">
               <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -111,6 +111,23 @@ if (typeof window !== "undefined") {
           <a href="/about" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Hráčky</a>
           <a href="/results" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Výsledky</a>
           <a href="/contact" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Kontakt</a>
+          
+          <!-- Social Links Separator -->
+          <div class="border-t border-white/20 my-3"></div>
+          
+          <!-- Social Links -->
+          <div class="flex items-center justify-center space-x-6 py-2">
+            <a href="https://x.com" class="text-white/90 hover:text-blue-400 p-2 transition-colors duration-200" aria-label="X (Twitter)">
+              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+            <a href="https://threads.net" class="text-white/90 hover:text-blue-400 p-2 transition-colors duration-200" aria-label="Threads">
+              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 192 192">
+                <path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6116 63.5383 90.6052 61.6848 97.2286 61.6848C97.3051 61.6848 97.3819 61.6848 97.4576 61.6855C105.707 61.7381 111.932 64.1366 115.961 68.814C118.893 72.2193 120.854 76.925 121.825 82.8638C114.511 81.6207 106.601 81.2385 98.145 81.7233C74.3247 83.0954 59.0111 96.9879 60.0396 116.292C60.5615 126.084 65.4397 134.508 73.775 140.011C80.8224 144.663 89.899 146.938 99.3323 146.423C111.79 145.74 121.563 140.987 128.381 132.296C133.559 125.696 136.834 117.143 138.28 106.366C144.217 109.949 148.617 114.664 151.047 120.332C155.179 129.967 155.42 145.8 142.501 158.708C131.182 170.016 117.576 174.908 97.0135 175.059C74.2042 175.252 56.9538 167.58 46.7381 151.045C38.746 138.182 36.1138 120.37 39.2777 99.2963C43.5655 69.8061 63.6651 47.5572 97.2374 44.8323C97.3355 44.8323 97.4336 44.8323 97.5317 44.8323C140.035 44.8323 149.49 86.4426 141.537 88.9883Z"/>
+              </svg>
+            </a>
+          </div>
         </nav>
       </div>
     </header>
@@ -169,8 +186,8 @@ if (typeof window !== "undefined") {
               <a href="/contact" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Kontakt</a>
             </nav>
 
-            <!-- Social Icons -->
-            <div class="flex items-center space-x-4">
+            <!-- Social Icons - Desktop Only -->
+            <div class="hidden md:flex items-center space-x-4">
               <a href="https://x.com" class="text-white/90 hover:text-blue-400 p-2" aria-label="X (Twitter)">
                 <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
@@ -208,6 +225,23 @@ if (typeof window !== "undefined") {
             <a href="/about" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Hráčky</a>
             <a href="/services" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Výsledky</a>
             <a href="/contact" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Kontakt</a>
+            
+            <!-- Social Links Separator -->
+            <div class="border-t border-white/20 my-3"></div>
+            
+            <!-- Social Links -->
+            <div class="flex items-center justify-center space-x-6 py-2">
+              <a href="https://x.com" class="text-white/90 hover:text-blue-400 p-2 transition-colors duration-200" aria-label="X (Twitter)">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+              <a href="https://threads.net" class="text-white/90 hover:text-blue-400 p-2 transition-colors duration-200" aria-label="Threads">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 192 192">
+                  <path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6116 63.5383 90.6052 61.6848 97.2286 61.6848C97.3051 61.6848 97.3819 61.6848 97.4576 61.6855C105.707 61.7381 111.932 64.1366 115.961 68.814C118.893 72.2193 120.854 76.925 121.825 82.8638C114.511 81.6207 106.601 81.2385 98.145 81.7233C74.3247 83.0954 59.0111 96.9879 60.0396 116.292C60.5615 126.084 65.4397 134.508 73.775 140.011C80.8224 144.663 89.899 146.938 99.3323 146.423C111.79 145.74 121.563 140.987 128.381 132.296C133.559 125.696 136.834 117.143 138.28 106.366C144.217 109.949 148.617 114.664 151.047 120.332C155.179 129.967 155.42 145.8 142.501 158.708C131.182 170.016 117.576 174.908 97.0135 175.059C74.2042 175.252 56.9538 167.58 46.7381 151.045C38.746 138.182 36.1138 120.37 39.2777 99.2963C43.5655 69.8061 63.6651 47.5572 97.2374 44.8323C97.3355 44.8323 97.4336 44.8323 97.5317 44.8323C140.035 44.8323 149.49 86.4426 141.537 88.9883Z"/>
+                </svg>
+              </a>
+            </div>
           </nav>
         </div>
       </header>
