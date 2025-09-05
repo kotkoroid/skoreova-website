@@ -19,7 +19,7 @@ $effect(() => {
 const isHomepage = $derived(page.url.pathname === "/");
 
 function toggleMobileMenu() {
-	isMobileMenuOpen.update(open => !open);
+	isMobileMenuOpen.update((open) => !open);
 }
 
 function handleMouseMove(event: MouseEvent) {
@@ -44,7 +44,7 @@ if (typeof window !== "undefined") {
   <!-- Homepage Layout: Overlay Header + Full Width Content + Footer -->
   <div class="relative">
     <!-- Header - Sticky positioned to overlay content -->
-    <header class="sticky top-0 backdrop-blur-sm shadow-sm z-50 mb-[-4rem]" style="background-color: rgba(17, 24, 39, 0.8);">
+    <header class="sticky top-0 backdrop-blur-sm shadow-sm z-50 bg-gradient-to-br from-purple-900/95 via-purple-800/95 to-purple-600/95">
       <div class="max-w-7xl mx-auto px-6">
         <div class="flex justify-between items-center h-16">
           <div class="flex items-center space-x-3">
@@ -58,7 +58,7 @@ if (typeof window !== "undefined") {
               </div>
             </a>
             <!-- Header text as link -->
-            <a href="/" class="text-xl font-semibold text-white hover:text-blue-400 transition-colors">
+            <a href="/" class="fontik text-xl tracking-wider font-semibold text-white hover:text-blue-400 transition-colors uppercase">
               Skóreová
             </a>
           </div>
@@ -105,16 +105,16 @@ if (typeof window !== "undefined") {
       </div>
 
       <!-- Mobile Navigation Menu -->
-      <div class="md:hidden absolute top-16 left-0 right-0 z-40 transition-all duration-300 ease-in-out backdrop-blur-sm {$isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}" style="background-color: rgba(17, 24, 39, 0.8);">
+      <div class="md:hidden absolute top-16 left-0 right-0 z-40 transition-all duration-300 ease-in-out backdrop-blur-sm bg-gradient-to-br from-purple-900/98 via-purple-800/98 to-purple-600/98 {$isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}">
         <nav class="px-4 pt-2 pb-4 space-y-1">
           <a href="/" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Články</a>
           <a href="/about" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Hráčky</a>
           <a href="/results" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Výsledky</a>
           <a href="/contact" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Kontakt</a>
-          
+
           <!-- Social Links Separator -->
           <div class="border-t border-white/20 my-3"></div>
-          
+
           <!-- Social Links -->
           <div class="flex items-center justify-center space-x-6 py-2">
             <a href="https://x.com" class="text-white/90 hover:text-blue-400 p-2 transition-colors duration-200" aria-label="X (Twitter)">
@@ -141,7 +141,8 @@ if (typeof window !== "undefined") {
   <!-- Footer -->
   <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-6 mt-12">
     <div class="max-w-6xl mx-auto px-4 text-center text-gray-600 dark:text-gray-400 text-sm">
-      <p>&copy; 2025 Skóreová. All rights reserved.</p>
+      <p>&copy; 2025 Falkara</p>
+      <p>Privacy Policy | Terms of Use | Contact</p>
     </div>
   </footer>
 
@@ -173,7 +174,7 @@ if (typeof window !== "undefined") {
                 </div>
               </a>
               <!-- Header text as link -->
-              <a href="/" class="text-xl font-semibold text-white hover:text-blue-400 transition-colors">
+              <a href="/" class="text-xl font-semibold text-white hover:text-blue-400 transition-colors uppercase">
                 Skóreová
               </a>
             </div>
@@ -225,10 +226,10 @@ if (typeof window !== "undefined") {
             <a href="/about" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Hráčky</a>
             <a href="/services" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Výsledky</a>
             <a href="/contact" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Kontakt</a>
-            
+
             <!-- Social Links Separator -->
             <div class="border-t border-white/20 my-3"></div>
-            
+
             <!-- Social Links -->
             <div class="flex items-center justify-center space-x-6 py-2">
               <a href="https://x.com" class="text-white/90 hover:text-blue-400 p-2 transition-colors duration-200" aria-label="X (Twitter)">
@@ -277,3 +278,9 @@ if (typeof window !== "undefined") {
     </div>
   </div>
 {/if}
+
+<style>
+    .fontik {
+        font-family: 'Audiowide';
+    }
+</style>

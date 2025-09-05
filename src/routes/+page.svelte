@@ -1,373 +1,273 @@
-<script>
-import { onMount, onDestroy } from 'svelte';
-import { crossfade, fly } from 'svelte/transition';
-import { cubicOut } from 'svelte/easing';
-import { isMobileMenuOpen } from '$lib/stores.js';
+<script lang="ts">
+import { onDestroy, onMount } from "svelte";
+import PlayerCard from "$lib/components/PlayerCard.svelte";
+import type { Player, CardPosition } from "$lib/types.js";
 
-let currentArticle = 0;
-let autoRotateTimer = null;
-let progressTimer = null;
-let progress = 0;
-let isMobile = false;
-let isTransitioning = false;
-let swipeDirection = 0;
-let isPaused = false;
-const ROTATE_INTERVAL = 5000;
-const PROGRESS_UPDATE_INTERVAL = 10;
+let currentPlayer = $state(0);
+let carouselInterval: ReturnType<typeof setInterval> | undefined;
 
-const [send, receive] = crossfade({
-  duration: 500,
-  easing: cubicOut
-});
-
-const articles = [
-  {
-    image: "/src/lib/Image_1.jpg",
-    alt: "Nejnovější články",
-    title: "DOHRÁNO TŘETÍ KOLO DRUHÉ LIGY",
-    description: "Raptorky se společně s Hradcem Králové ujímají špice ligové tabulky.",
-    hoverColor: "text-blue-300"
-  },
-  {
-    image: "/src/lib/Image_2.jpg",
-    alt: "Profily hráček",
-    title: "ČESKÉ TÝMY LETOS BEZ UWCL",
-    description: "Oba české týmy narazily na přemožitele ve finále druhého předkola.",
-    hoverColor: "text-purple-300"
-  },
-  {
-    image: "/src/lib/Image_3.jpg",
-    alt: "Zápasové reporty",
-    title: "PŘEDEHRÁVKA SEDMÉHO KOLA",
-    description: "Slovácko nadělovalo. FC Praha opět bez vstřelené branky.",
-    hoverColor: "text-green-300"
-  }
+const players: Player[] = [
+	{
+		image: "/Barbora-Votikova.png",
+		name: "Barbora Votíková",
+		club: "SK Slavia Praha",
+		position: "Útočník",
+		nationality: "Německo",
+		goals: 24,
+		assists: 8,
+	},
+	{
+		image: "/Jana-Zufankova.png",
+		name: "Jana Žufánková",
+		club: "SK Slavia Praha",
+		position: "Záložník",
+		nationality: "Španělsko",
+		goals: 18,
+		assists: 15,
+	},
+	{
+		image: "/Kamila-Dubcova.png",
+		name: "Kamila Dubcová",
+		club: "SK Slavia Praha",
+		position: "Křídlo",
+		nationality: "Švédsko",
+		goals: 12,
+		assists: 11,
+	},
+	{
+		image: "/Kristyna-Ruzickova.png",
+		name: "Kristýna Růžičková",
+		club: "SK Slavia Praha",
+		position: "Obránkyně",
+		nationality: "Nizozemsko",
+		goals: 3,
+		assists: 7,
+	},
+	{
+		image: "/Tamara-Moravkova.png",
+		name: "Tamara Morávková",
+		club: "SK Slavia Praha",
+		position: "Brankářka",
+		nationality: "Česká republika",
+		goals: 0,
+		assists: 0,
+	},
+	{
+		image: "/Vanesa-Jilkova.png",
+		name: "Vanesa Jílková",
+		club: "SK Slavia Praha",
+		position: "Záložník",
+		nationality: "Německo",
+		goals: 14,
+		assists: 9,
+	},
 ];
 
-function startAutoRotate() {
-  if (autoRotateTimer) clearInterval(autoRotateTimer);
-  if (progressTimer) clearInterval(progressTimer);
-
-  progress = 0;
-  isPaused = false;
-
-  // Progress bar animation
-  progressTimer = setInterval(() => {
-    progress += (100 / (ROTATE_INTERVAL / PROGRESS_UPDATE_INTERVAL));
-    if (progress >= 100) {
-      progress = 0;
-      currentArticle = (currentArticle + 1) % articles.length;
-    }
-  }, PROGRESS_UPDATE_INTERVAL);
+function nextPlayer() {
+	currentPlayer = (currentPlayer + 1) % players.length;
 }
 
-function stopAutoRotate() {
-  if (autoRotateTimer) {
-    clearInterval(autoRotateTimer);
-    autoRotateTimer = null;
-  }
-  if (progressTimer) {
-    clearInterval(progressTimer);
-    progressTimer = null;
-  }
-  progress = 0;
+function goToPlayer(index: number) {
+	currentPlayer = index;
+	resetCarouselTimer();
 }
 
-function pauseAutoRotate() {
-  if (autoRotateTimer) {
-    clearInterval(autoRotateTimer);
-    autoRotateTimer = null;
-  }
-  if (progressTimer) {
-    clearInterval(progressTimer);
-    progressTimer = null;
-  }
-  isPaused = true;
-  // Don't reset progress - keep current value
+function startCarouselTimer() {
+	carouselInterval = setInterval(nextPlayer, 4000);
 }
 
-function resumeAutoRotate() {
-  if (autoRotateTimer) clearInterval(autoRotateTimer);
-  if (progressTimer) clearInterval(progressTimer);
-
-  isPaused = false;
-
-  // Resume progress bar animation from current progress
-  progressTimer = setInterval(() => {
-    progress += (100 / (ROTATE_INTERVAL / PROGRESS_UPDATE_INTERVAL));
-    if (progress >= 100) {
-      progress = 0;
-      currentArticle = (currentArticle + 1) % articles.length;
-    }
-  }, PROGRESS_UPDATE_INTERVAL);
+function resetCarouselTimer() {
+	if (carouselInterval) {
+		clearInterval(carouselInterval);
+	}
+	startCarouselTimer();
 }
 
-function goToPrevious() {
-  if (isTransitioning) return;
-  isTransitioning = true;
-  swipeDirection = -1;
-  stopAutoRotate();
-  setTimeout(() => {
-    currentArticle = (currentArticle - 1 + articles.length) % articles.length;
-    swipeDirection = 0;
-    isTransitioning = false;
-    startAutoRotate();
-  }, 150);
+function previousPlayer() {
+	goToPlayer((currentPlayer - 1 + players.length) % players.length);
+	resetCarouselTimer();
 }
 
-function goToNext() {
-  if (isTransitioning) return;
-  isTransitioning = true;
-  swipeDirection = 1;
-  stopAutoRotate();
-  setTimeout(() => {
-    currentArticle = (currentArticle + 1) % articles.length;
-    swipeDirection = 0;
-    isTransitioning = false;
-    startAutoRotate();
-  }, 150);
+function nextPlayerNav() {
+	goToPlayer((currentPlayer + 1) % players.length);
+	resetCarouselTimer();
 }
 
-function goToArticle(index) {
-  if (index !== currentArticle && !isTransitioning) {
-    currentArticle = index;
-  }
+function handleKeydown(event: KeyboardEvent) {
+	switch (event.key) {
+		case "ArrowLeft":
+			event.preventDefault();
+			previousPlayer();
+			break;
+		case "ArrowRight":
+			event.preventDefault();
+			nextPlayerNav();
+			break;
+		case "Home":
+			event.preventDefault();
+			goToPlayer(0);
+			resetCarouselTimer();
+			break;
+		case "End":
+			event.preventDefault();
+			goToPlayer(players.length - 1);
+			resetCarouselTimer();
+			break;
+		case " ":
+		case "Enter":
+			event.preventDefault();
+			resetCarouselTimer();
+			break;
+	}
 }
 
-function goToArticleWithTimer(index) {
-  if (index !== currentArticle && !isTransitioning) {
-    isTransitioning = true;
-    stopAutoRotate();
-    setTimeout(() => {
-      currentArticle = index;
-      isTransitioning = false;
-      startAutoRotate();
-    }, 150);
-  }
-}
+// Get visible players for the 5-card layout (far-left, left, center, right, far-right)
+const visiblePlayers = $derived.by(() => {
+	const visible: Array<{player: Player, index: number, position: CardPosition}> = [];
+	const totalPlayers = players.length;
+
+	// Far left card (behind left)
+	const farLeftIndex = (currentPlayer - 2 + totalPlayers) % totalPlayers;
+	visible.push({
+		player: players[farLeftIndex],
+		index: farLeftIndex,
+		position: "far-left",
+	});
+
+	// Left card
+	const leftIndex = (currentPlayer - 1 + totalPlayers) % totalPlayers;
+	visible.push({
+		player: players[leftIndex],
+		index: leftIndex,
+		position: "left",
+	});
+
+	// Center card (main)
+	visible.push({
+		player: players[currentPlayer],
+		index: currentPlayer,
+		position: "center",
+	});
+
+	// Right card
+	const rightIndex = (currentPlayer + 1) % totalPlayers;
+	visible.push({
+		player: players[rightIndex],
+		index: rightIndex,
+		position: "right",
+	});
+
+	// Far right card (behind right)
+	const farRightIndex = (currentPlayer + 2) % totalPlayers;
+	visible.push({
+		player: players[farRightIndex],
+		index: farRightIndex,
+		position: "far-right",
+	});
+
+	return visible;
+});
 
 onMount(() => {
-  startAutoRotate();
-  // Check if mobile
-  const checkMobile = () => {
-    isMobile = window.innerWidth < 768;
-  };
-  checkMobile();
-  window.addEventListener('resize', checkMobile);
-  
-  return () => {
-    window.removeEventListener('resize', checkMobile);
-  };
+	startCarouselTimer();
+	if (typeof window !== "undefined") {
+		window.addEventListener("keydown", handleKeydown);
+	}
 });
 
 onDestroy(() => {
-  stopAutoRotate();
+	if (carouselInterval) {
+		clearInterval(carouselInterval);
+	}
+	if (typeof window !== "undefined") {
+		window.removeEventListener("keydown", handleKeydown);
+	}
 });
 </script>
 
-<!-- Featured Articles Section -->
-<section class="w-full relative h-[600px] overflow-hidden bg-black">
-  <!-- Full Background Images -->
-  {#each articles as article, index (article.title)}
-    <div
-      class="absolute inset-0 transition-opacity duration-700 ease-in-out {index === currentArticle ? 'opacity-100 z-10' : 'opacity-0 z-0'}"
-      style="transition-delay: {index === currentArticle ? '0ms' : '100ms'}"
-    >
-      <img
-        src={article.image}
-        alt={article.alt}
-        class="w-full h-full object-cover"
-      >
-      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-      
-      <!-- Gradual blur overlay from right side - only on desktop when sidebar is visible -->
-      <div class="hidden md:block absolute top-0 right-0 bottom-0 w-96 backdrop-blur-[2px] bg-transparent" 
-           style="mask: linear-gradient(to left, black 0%, black 85%, transparent 100%); -webkit-mask: linear-gradient(to left, black 0%, black 85%, transparent 100%);"></div>
-    </div>
-  {/each}
-  
-  <!-- Progress Bar - Mobile Only, at bottom of image -->
-  {#if isMobile}
-    <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-white/20 z-30">
-      <div
-        class="h-full bg-white transition-all duration-75 ease-linear"
-        style="width: {progress}%"
-      ></div>
-    </div>
-  {/if}
+<style>
+@keyframes float {
+	0%, 100% { transform: translateY(0px) rotate(0deg); }
+	33% { transform: translateY(-8px) rotate(1deg); }
+	66% { transform: translateY(4px) rotate(-0.5deg); }
+}
 
-  <!-- Content Container -->
-  <div class="relative z-20 p-6 pt-20">
-    <div class="flex flex-col md:flex-row gap-6 h-full min-h-[480px]">
-      <!-- Main Article Content Area -->
-      <div class="flex-1 flex flex-col justify-end">
-        <div class="max-w-3xl">
-          <div class="mb-2">
-            <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-white group-hover:{articles[currentArticle].hoverColor} transition-colors uppercase tracking-wide">
-              {articles[currentArticle].title}
-            </h2>
-          </div>
-          <div>
-            <p class="text-white/90 text-base md:text-lg">
-              {articles[currentArticle].description}
-            </p>
-          </div>
-        </div>
-      </div>
+.animate-float {
+	animation: float 6s ease-in-out infinite;
+}
 
-      <!-- Sidebar with All Article Previews -->
-      <div class="w-full md:w-80 relative">
-        
-        <!-- Desktop: Show all articles - Always visible on desktop -->
-        <div class="hidden md:flex flex-col gap-3 mt-12">
-          {#each articles as article, index}
-            <div
-              class="group relative overflow-hidden rounded-lg cursor-pointer border-2 {currentArticle === index ? 'border-transparent' : 'border-white/30'} transform transition-transform duration-300 ease-out hover:scale-105"
-              onmouseenter={() => {
-                if (index !== currentArticle) {
-                  // Switching to different article - reset timer but pause immediately
-                  stopAutoRotate();
-                  currentArticle = index;
-                } else {
-                  // Hovering over current article - always pause (even if re-hovering)
-                  pauseAutoRotate();
-                }
-              }}
-              onmouseleave={() => {
-                if (isPaused) {
-                  // Resume from where we left off
-                  resumeAutoRotate();
-                } else {
-                  // Start fresh (for article switches)
-                  startAutoRotate();
-                }
-              }}
-            >
-              <!-- Full-width Article Image -->
-              <div class="relative h-28">
-                <img
-                  src={article.image}
-                  alt={article.alt}
-                  class="w-full h-full object-cover"
-                >
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+.fontik {
+    font-family: 'Audiowide';
+}
+</style>
 
-                <!-- Article Title Overlay -->
-                <div class="absolute bottom-0 left-0 right-0 p-2">
-                  <h3 class="text-sm font-semibold text-white leading-tight overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                    {article.title}
-                  </h3>
-                </div>
-              </div>
-              
-              <!-- Progressive border color transformation for active article -->
-              {#if currentArticle === index}
-                <!-- Left border -->
-                <div class="absolute left-0 w-0.5 rounded-full transition-all duration-75 ease-linear" 
-                     style="height: 100%; bottom: 0; background: linear-gradient(to top, white {progress <= 50 ? (progress / 50) * 100 : 100}%, rgba(255,255,255,0.3) {progress <= 50 ? (progress / 50) * 100 : 100}%);"></div>
-                     
-                <!-- Top border -->
-                <div class="absolute top-0 h-0.5 rounded-full transition-all duration-75 ease-linear" 
-                     style="width: 100%; left: 0; background: linear-gradient(to right, {progress > 50 ? 'white' : 'rgba(255,255,255,0.3)'} 0%, white {progress > 50 ? ((progress - 50) / 50) * 100 : 0}%, rgba(255,255,255,0.3) {progress > 50 ? ((progress - 50) / 50) * 100 : 0}%);"></div>
-                     
-                <!-- Bottom border -->
-                <div class="absolute bottom-0 h-0.5 rounded-full transition-all duration-75 ease-linear" 
-                     style="width: 100%; left: 0; background: linear-gradient(to right, white {progress <= 50 ? (progress / 50) * 100 : 100}%, rgba(255,255,255,0.3) {progress <= 50 ? (progress / 50) * 100 : 100}%);"></div>
-                     
-                <!-- Right border -->
-                <div class="absolute right-0 w-0.5 rounded-full transition-all duration-75 ease-linear" 
-                     style="height: 100%; bottom: 0; background: linear-gradient(to top, {progress > 50 ? 'white' : 'rgba(255,255,255,0.3)'} 0%, white {progress > 50 ? ((progress - 50) / 50) * 100 : 0}%, rgba(255,255,255,0.3) {progress > 50 ? ((progress - 50) / 50) * 100 : 0}%);"></div>
-              {/if}
-            </div>
-          {/each}
-        </div>
+<!-- Hero Section -->
+<section class="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-600 flex flex-col justify-start items-center text-white relative overflow-hidden px-4 pt-6">
 
-        <!-- View All Articles Button - Desktop Only -->
-        <div class="hidden md:flex justify-center mt-4">
-          <a
-            href="/articles"
-            class="flex items-center justify-center h-12 px-6 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-300 backdrop-blur-sm"
-          >
-Všechny články
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-  
+	<!-- Background decorative elements -->
+	<div class="absolute inset-0 overflow-hidden">
+		<div class="absolute top-20 left-10 w-32 h-32 bg-white/5 rounded-full blur-xl animate-float"></div>
+		<div class="absolute top-1/3 right-16 w-24 h-24 bg-pink-300/10 rounded-full blur-lg animate-float" style="animation-delay: 2s;"></div>
+		<div class="absolute bottom-1/4 left-1/4 w-40 h-40 bg-white/5 rounded-full blur-2xl animate-float" style="animation-delay: 4s;"></div>
+		<div class="absolute top-1/2 right-8 w-16 h-16 bg-blue-300/10 rounded-full blur-md animate-float" style="animation-delay: 1s;"></div>
+	</div>
 
+	<!-- Main Content -->
+	<div class="relative z-10 text-center mb-2">
+		<!-- Main Headline -->
+		<h1 class="fontik text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] font-black mb-6 leading-tight tracking-wider">
+			<div class="text-white mb-2">OBJEVTE</div>
+			<div class="text-pink-200 mb-2">ŽENSKÝ</div>
+			<div class="text-white">FOTBAL</div>
+		</h1>
+	</div>
+
+	<!-- Player Cards Section -->
+	<div class="relative z-10 w-full max-w-4xl mx-auto mb-8 h-80">
+		<div class="relative w-full h-full flex justify-center items-center">
+			{#each visiblePlayers as { player, index, position } (index)}
+				<PlayerCard
+					{player}
+					{position}
+					onClick={() => goToPlayer(index)}
+				/>
+			{/each}
+	</div>
+
+	<div>
+	100+ hráček
+	20+ týmů
+	&infin; statistik
+	</div>
+
+	<!-- CTA Button -->
+	<div class="absolute -bottom-25 left-1/2 transform -translate-x-1/2 z-10">
+		<a
+			href="/players"
+			class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-6 px-16 rounded-full text-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-blue-500/25"
+		>
+			VSTOUPIT
+		</a>
+	</div>
+
+	<!-- Side navigation arrows -->
+	<button
+		onclick={previousPlayer}
+		class="absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all duration-300 shadow-md hover:shadow-lg hover:scale-110 z-30"
+		aria-label="Předchozí hráčka"
+	>
+		<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+		</svg>
+	</button>
+
+	<button
+		onclick={nextPlayerNav}
+		class="absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all duration-300 shadow-md hover:shadow-lg hover:scale-110 z-30"
+		aria-label="Následující hráčka"
+	>
+		<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+		</svg>
+	</button>
 </section>
-
-<!-- Mobile Navigation Controls - Outside and under the image -->
-<div class="md:hidden py-10 bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 dark:from-gray-950 dark:via-slate-900 dark:to-black transition-all duration-300 ease-in-out">
-  <div class="max-w-4xl mx-auto px-6 transform transition-transform duration-300 ease-in-out">
-      <div class="flex justify-between items-center">
-        <a
-          href="/articles"
-          class="text-white hover:text-gray-200 font-medium transition-colors duration-300 uppercase"
-        >
-          VŠECHNY ČLÁNKY
-        </a>
-        <div class="flex gap-6 items-center">
-          <button 
-            onclick={goToPrevious}
-            class="text-white hover:text-gray-200 font-medium transition-colors duration-300 uppercase {isTransitioning ? 'opacity-50' : ''}"
-            aria-label="PŘEDCHOZÍ"
-            disabled={isTransitioning}
-            title="PŘEDCHOZÍ"
-          >
-            ← PŘEDCHOZÍ
-          </button>
-          <button 
-            onclick={goToNext}
-            class="text-white hover:text-gray-200 font-medium transition-colors duration-300 uppercase {isTransitioning ? 'opacity-50' : ''}"
-            aria-label="DALŠÍ"
-            disabled={isTransitioning}
-            title="DALŠÍ"
-          >
-            DALŠÍ →
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-<!-- Player Search Section -->
-<section class="relative py-10 bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 dark:from-gray-950 dark:via-slate-900 dark:to-black text-white">
-  <div class="max-w-4xl mx-auto text-center px-6">
-    <h2 class="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 dark:from-blue-300 dark:via-purple-300 dark:to-pink-300 bg-clip-text text-transparent">
-      Hledáte konkrétní hráčku?
-    </h2>
-
-    <div class="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto mb-8">
-      <div class="flex-1">
-        <input
-          type="text"
-          placeholder="Zadejte jméno..."
-          class="w-full px-6 py-4 text-lg border-2 border-white/20 dark:border-white/10 bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-xl focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-300 focus:border-blue-400 dark:focus:border-blue-300 transition-all text-white placeholder-white/60 dark:placeholder-white/40"
-          onfocus={(e) => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })}
-        >
-      </div>
-      <button class="px-8 py-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl">
-        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-        </svg>
-        Hledat
-      </button>
-    </div>
-
-    <div>
-      <a
-        href="/about"
-        class="inline-flex items-center px-8 py-4 bg-white/20 dark:bg-white/10 backdrop-blur-sm hover:bg-white/30 dark:hover:bg-white/20 text-white font-medium rounded-xl transition-all border border-white/20 dark:border-white/10"
-      >
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-        </svg>
-        Procházet databázi hráček
-      </a>
-    </div>
-  </div>
-</section>
-
-
