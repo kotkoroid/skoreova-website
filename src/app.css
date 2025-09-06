@@ -3,7 +3,7 @@
 @variant dark (:where(.dark) &);
 
 @font-face {
-	font-family: "Audiowide";
-	src: url("/fonts/Audiowide-Regular.ttf") format("truetype");
+	font-family: "SpaceMonoBold";
+	src: url("/fonts/SpaceMono-Bold.ttf") format("truetype");
 	font-display: swap;
 }

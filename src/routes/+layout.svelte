@@ -44,35 +44,30 @@ if (typeof window !== "undefined") {
   <!-- Homepage Layout: Overlay Header + Full Width Content + Footer -->
   <div class="relative">
     <!-- Header - Sticky positioned to overlay content -->
-    <header class="sticky top-0 backdrop-blur-sm shadow-sm z-50 bg-gradient-to-br from-purple-900/95 via-purple-800/95 to-purple-600/95">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="flex justify-between items-center h-16">
+    <header class="sticky top-0 backdrop-blur-md shadow-sm z-50" style="background: linear-gradient(135deg, rgba(58, 9, 110, 0.6) 0%, rgba(30, 11, 64, 0.6) 50%, rgba(0, 0, 0, 0.6) 100%)">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between items-center h-20">
           <div class="flex items-center space-x-3">
             <!-- Logo placeholder -->
-            <a href="/" class="flex items-center">
-              <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <!-- Replace this div with your SVG logo -->
-                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                </svg>
-              </div>
+            <a href="/" class="flex items-center" style="cursor: pointer !important;">
+              <img src="/Logo.png" alt="Skóreová logo" class="w-15 h-15" style="cursor: pointer !important;" />
             </a>
             <!-- Header text as link -->
-            <a href="/" class="fontik text-xl tracking-wider font-semibold text-white hover:text-blue-400 transition-colors uppercase">
+            <a href="/" class="fontik text-2xl tracking-wider font-semibold text-white hover:text-blue-400 transition-colors uppercase" style="cursor: pointer !important;">
               Skóreová
             </a>
           </div>
 
-          <!-- Desktop Navigation -->
-          <nav class="hidden md:flex space-x-8">
+          <!-- Desktop Navigation (1024px+) -->
+          <nav class="hidden lg:flex space-x-8">
             <a href="/articles" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Články</a>
             <a href="/about" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Hráčky</a>
             <a href="/results" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Výsledky</a>
             <a href="/contact" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Kontakt</a>
           </nav>
 
-          <!-- Social Icons - Desktop Only -->
-          <div class="hidden md:flex items-center space-x-4">
+          <!-- Social Icons - Desktop Only (1024px+) -->
+          <div class="hidden lg:flex items-center space-x-4">
 
             <a href="https://x.com" class="text-white/90 hover:text-blue-400 p-2" aria-label="X (Twitter)">
               <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -86,30 +81,23 @@ if (typeof window !== "undefined") {
             </a>
           </div>
 
-          <!-- Mobile menu button -->
-          <div class="md:hidden ml-4">
+          <!-- Mobile & Tablet menu button (up to 1024px) -->
+          <div class="lg:hidden ml-4">
             <button
               onclick={toggleMobileMenu}
               class="text-white/90 hover:text-white focus:outline-none focus:text-white p-2 relative"
               aria-label="Toggle menu"
             >
-              <!-- Animated hamburger icon -->
-              <div class="w-6 h-6 relative">
-                <span class="absolute left-0 top-1 w-full h-0.5 bg-current transform transition-all duration-300 ease-in-out {$isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}"></span>
-                <span class="absolute left-0 top-3 w-full h-0.5 bg-current transition-all duration-300 ease-in-out {$isMobileMenuOpen ? 'opacity-0' : 'opacity-100'}"></span>
-                <span class="absolute left-0 top-5 w-full h-0.5 bg-current transform transition-all duration-300 ease-in-out {$isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}"></span>
-              </div>
+              <img src={$isMobileMenuOpen ? "/Close.svg" : "/Menu.svg"} alt={$isMobileMenuOpen ? "Close menu" : "Open menu"} class="w-8 h-8 transition-all duration-300 ease-in-out" />
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Mobile Navigation Menu -->
-      <div class="md:hidden absolute top-16 left-0 right-0 z-40 transition-all duration-300 ease-in-out backdrop-blur-sm bg-gradient-to-br from-purple-900/98 via-purple-800/98 to-purple-600/98 {$isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}">
+      <!-- Mobile & Tablet Navigation Menu -->
+      <div class="lg:hidden absolute top-20 left-0 right-0 z-40 transition-all duration-300 ease-in-out backdrop-blur-md bg-black/30 {$isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}">
         <nav class="px-4 pt-2 pb-4 space-y-1">
-          <a href="/" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Články</a>
-          <a href="/about" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Hráčky</a>
-          <a href="/results" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Výsledky</a>
+          <a href="/hub" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Hub</a>
           <a href="/contact" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Kontakt</a>
 
           <!-- Social Links Separator -->
@@ -162,69 +150,55 @@ if (typeof window !== "undefined") {
       <!-- Header -->
       <header class="backdrop-blur-sm shadow-sm sticky top-0 z-50" style="background-color: rgba(17, 24, 39, 0.8);">
         <div class="max-w-7xl mx-auto px-6">
-          <div class="flex justify-between items-center h-16">
+          <div class="flex justify-between items-center h-20">
             <div class="flex items-center space-x-3">
               <!-- Logo placeholder -->
               <a href="/" class="flex items-center">
-                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <!-- Replace this div with your SVG logo -->
-                  <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                  </svg>
-                </div>
+                <img src="/Logo.png" alt="Skóreová logo" class="w-12 h-12 min-[480px]:w-14 min-[480px]:h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 xl:w-24 xl:h-24" />
               </a>
               <!-- Header text as link -->
-              <a href="/" class="text-xl font-semibold text-white hover:text-blue-400 transition-colors uppercase">
+              <a href="/" class="text-lg min-[480px]:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-white hover:text-blue-400 transition-colors uppercase hidden min-[320px]:block">
                 Skóreová
               </a>
             </div>
 
-            <!-- Desktop Navigation -->
-            <nav class="hidden md:flex space-x-8">
-              <a href="/" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Články</a>
-              <a href="/database" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Hráčky</a>
-              <a href="/results" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Výsledky</a>
-              <a href="/contact" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Kontakt</a>
+            <!-- Desktop Navigation (1024px+) -->
+            <nav class="hidden lg:flex space-x-6 xl:space-x-10">
+              <a href="/hub" class="text-white/90 hover:text-blue-400 px-4 lg:px-5 xl:px-6 py-3 lg:py-4 text-base lg:text-lg xl:text-xl font-medium uppercase">Hub</a>
+              <a href="/contact" class="text-white/90 hover:text-blue-400 px-4 lg:px-5 xl:px-6 py-3 lg:py-4 text-base lg:text-lg xl:text-xl font-medium uppercase">Kontakt</a>
             </nav>
 
-            <!-- Social Icons - Desktop Only -->
-            <div class="hidden md:flex items-center space-x-4">
-              <a href="https://x.com" class="text-white/90 hover:text-blue-400 p-2" aria-label="X (Twitter)">
-                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+            <!-- Social Icons - Desktop Only (1024px+) -->
+            <div class="hidden lg:flex items-center space-x-3 xl:space-x-5">
+              <a href="https://x.com" class="text-white/90 hover:text-blue-400 p-3 lg:p-4 xl:p-5" aria-label="X (Twitter)">
+                <svg class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                 </svg>
               </a>
-              <a href="https://threads.net" class="text-white/90 hover:text-blue-400 p-2" aria-label="Threads">
-                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 192 192">
-                  <path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6116 63.5383 90.6052 61.6848 97.2286 61.6848C97.3051 61.6848 97.3819 61.6848 97.4576 61.6855C105.707 61.7381 111.932 64.1366 115.961 68.814C118.893 72.2193 120.854 76.925 121.825 82.8638C114.511 81.6207 106.601 81.2385 98.145 81.7233C74.3247 83.0954 59.0111 96.9879 60.0396 116.292C60.5615 126.084 65.4397 134.508 73.775 140.011C80.8224 144.663 89.899 146.938 99.3323 146.423C111.79 145.74 121.563 140.987 128.381 132.296C133.559 125.696 136.834 117.143 138.28 106.366C144.217 109.949 148.617 114.664 151.047 120.332C155.179 129.967 155.42 145.8 142.501 158.708C131.182 170.016 117.576 174.908 97.0135 175.059C74.2042 175.252 56.9538 167.58 46.7381 151.045C38.746 138.182 36.1138 120.37 39.2777 99.2963C43.5655 69.8061 63.6651 47.5572 97.2374 44.8323C97.3355 44.8323 97.4336 44.8323 97.5317 44.8323C140.035 44.8323 149.49 86.4426 141.537 88.9883Z"/>
+              <a href="https://threads.net" class="text-white/90 hover:text-blue-400 p-3 lg:p-4 xl:p-5" aria-label="Threads">
+                <svg class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8" fill="currentColor" viewBox="0 0 192 192">
+                  <path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6116 63.5383 90.6052 61.6848 97.2286 61.6848C97.3051 61.6848 97.3819 61.6848 97.4576 61.6855C105.707 61.7381 111.932 64.1366 115.961 68.814C118.893 72.2193 120.854 76.925 121.825 82.8638C114.511 81.6207 106.601 81.2385 98.145 81.7233C74.3247 83.0954 59.0111 96.9879 60.0396 116.292C60.5615 126.084 65.4397 134.508 73.775 140.011C80.8224 144663 89.899 146.938 99.3323 146.423C111.79 145.74 121.563 140.987 128.381 132.296C133.559 125.696 136.834 117.143 138.28 106.366C144.217 109.949 148.617 114.664 151.047 120.332C155.179 129.967 155.42 145.8 142.501 158.708C131.182 170.016 117.576 174.908 97.0135 175.059C74.2042 175.252 56.9538 167.58 46.7381 151.045C38.746 138.182 36.1138 120.37 39.2777 99.2963C43.5655 69.8061 63.6651 47.5572 97.2374 44.8323C97.3355 44.8323 97.4336 44.8323 97.5317 44.8323C140.035 44.8323 149.49 86.4426 141.537 88.9883Z"/>
                 </svg>
               </a>
             </div>
 
-            <!-- Mobile menu button -->
-            <div class="md:hidden ml-4">
+            <!-- Mobile & Tablet menu button (up to 1024px) -->
+            <div class="lg:hidden ml-4">
               <button
                 onclick={toggleMobileMenu}
                 class="text-white/90 hover:text-white focus:outline-none focus:text-white p-2 relative"
                 aria-label="Toggle menu"
               >
-                <!-- Animated hamburger icon -->
-                <div class="w-6 h-6 relative">
-                  <span class="absolute left-0 top-1 w-full h-0.5 bg-current transform transition-all duration-300 ease-in-out {$isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}"></span>
-                  <span class="absolute left-0 top-3 w-full h-0.5 bg-current transition-all duration-300 ease-in-out {$isMobileMenuOpen ? 'opacity-0' : 'opacity-100'}"></span>
-                  <span class="absolute left-0 top-5 w-full h-0.5 bg-current transform transition-all duration-300 ease-in-out {$isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}"></span>
-                </div>
+                <img src={$isMobileMenuOpen ? "/Close.svg" : "/Menu.svg"} alt={$isMobileMenuOpen ? "Close menu" : "Open menu"} class="w-10 h-10 min-[480px]:w-11 min-[480px]:h-11 sm:w-12 sm:h-12 md:w-13 md:h-13 lg:w-14 lg:h-14 transition-all duration-300 ease-in-out" />
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Mobile Navigation Menu -->
-        <div class="md:hidden absolute top-16 left-0 right-0 z-40 transition-all duration-300 ease-in-out backdrop-blur-sm {$isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}" style="background-color: rgba(17, 24, 39, 0.8);">
+        <!-- Mobile & Tablet Navigation Menu -->
+        <div class="lg:hidden absolute top-20 left-0 right-0 z-40 transition-all duration-300 ease-in-out backdrop-blur-sm {$isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}" style="background-color: rgba(17, 24, 39, 0.8);">
           <nav class="px-4 pt-2 pb-4 space-y-1">
-            <a href="/" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Články</a>
-            <a href="/about" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Hráčky</a>
-            <a href="/services" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Výsledky</a>
+            <a href="/hub" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Hub</a>
             <a href="/contact" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Kontakt</a>
 
             <!-- Social Links Separator -->
@@ -281,6 +255,6 @@ if (typeof window !== "undefined") {
 
 <style>
     .fontik {
-        font-family: 'Audiowide';
+        font-family: 'SpaceMonoBold';
     }
 </style>
