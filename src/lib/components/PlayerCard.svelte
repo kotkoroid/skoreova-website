@@ -11,7 +11,7 @@ const { player, position, onClick }: Props = $props();
 </script>
 
 <button
-	class="absolute w-60 h-80 cursor-pointer bg-transparent border-none p-0"
+	class="absolute w-48 h-64 cursor-pointer bg-transparent border-none p-0"
 	style="
 		transform:
 			translate3d({position === 'far-left' ? '-220px' : position === 'left' ? '-110px' : position === 'center' ? '0px' : position === 'right' ? '110px' : '220px'}, 0, 0)
@@ -29,7 +29,7 @@ const { player, position, onClick }: Props = $props();
 	<div class="relative w-full h-full {position === 'center' ? 'bg-white/35' : 'bg-white/80 backdrop-blur-xl'} rounded-2xl border border-white/50 shadow-2xl overflow-hidden transition-[transform,box-shadow] duration-500 ease-in-out carousel-slide-in flex flex-col">
 
 		<!-- Player Image with gradient overlay -->
-		<div class="relative h-52 overflow-hidden {position === 'center' ? 'backdrop-blur-xl' : ''} flex-shrink-0">
+		<div class="relative h-40 overflow-hidden {position === 'center' ? 'backdrop-blur-xl' : ''} flex-shrink-0">
 			<div class="relative w-full h-full">
 				<img
 					src={player.image}
@@ -50,14 +50,14 @@ const { player, position, onClick }: Props = $props();
 		</div>
 
 		<!-- Player Info -->
-		<div class="px-4 py-3 text-center relative z-10 transition-all duration-700 ease-in-out bg-gradient-to-r from-pink-300/80 via-pink-400/80 to-pink-500/80 backdrop-blur-md flex-1 flex flex-col justify-center -mt-px">
+		<div class="px-3 py-2 text-center relative z-10 transition-all duration-700 ease-in-out bg-gradient-to-r from-pink-300/80 via-pink-400/80 to-pink-500/80 backdrop-blur-md flex-1 flex flex-col justify-center -mt-px">
 			<!-- Player Name -->
-			<h3 class="uppercase text-lg font-bold text-white mb-1 transition-all duration-500 ease-in-out transform" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+			<h3 class="uppercase text-base font-bold text-white mb-1 transition-all duration-500 ease-in-out transform" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
 				{player.name}
 			</h3>
 
 			<!-- Club -->
-			<p class="text-white font-medium text-sm mb-3 transition-all duration-500 ease-in-out transform" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+			<p class="text-white font-medium text-xs mb-2 transition-all duration-500 ease-in-out transform" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
 				{player.club}
 			</p>
 

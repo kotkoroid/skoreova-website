@@ -41,8 +41,7 @@ if (typeof window !== "undefined") {
 </script>
 
 {#if isHomepage}
-  <!-- Homepage Layout: Overlay Header + Full Width Content + Footer -->
-  <div class="relative">
+  <!-- Homepage Layout: Single Scroll Context with Fixed Header -->
     <!-- Header - Fixed positioned to overlay content -->
     <header class="fixed top-0 left-0 right-0 backdrop-blur-md shadow-sm z-50 transition-all duration-300 ease-in-out" style="background: transparent;">
       <div class="max-w-7xl mx-auto px-4">
@@ -101,14 +100,13 @@ if (typeof window !== "undefined") {
       </div>
     </header>
 
-    <!-- Full Width Homepage Content -->
-    <main class="w-full">
-      {@render children()}
-    </main>
-  </div>
+  <!-- Full Width Homepage Content -->
+  <main class="w-full">
+    {@render children()}
+  </main>
 
   <!-- Footer -->
-  <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-6 mt-12">
+  <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-6">
     <div class="max-w-6xl mx-auto px-4 text-center text-gray-600 dark:text-gray-400 text-sm">
       <p>&copy; 2025 Falkara</p>
       <p>Privacy Policy | Terms of Use | Contact</p>

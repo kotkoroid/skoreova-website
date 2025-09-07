@@ -15,7 +15,7 @@ let targetY = $state(0);
 
 function handleMouseMove(event: MouseEvent) {
 	targetX = event.clientX;
-	targetY = event.clientY + window.scrollY;
+	targetY = event.clientY;
 }
 
 // Smooth animation loop
@@ -289,43 +289,7 @@ onDestroy(() => {
 	padding: 0;
 }
 
-/* Mobile Grid Layout */
-@media (max-width: 767px) {
-	.hero-grid-container {
-		grid-template-areas:
-			"hero-text"
-			"cta-button"
-			"player-cards"
-			"logos";
-		grid-template-rows: auto auto auto auto;
-		grid-template-columns: 1fr;
-	}
-}
 
-/* Tablet Grid Layout */
-@media (min-width: 768px) and (max-width: 1023px) {
-	.hero-grid-container {
-		grid-template-areas:
-			". hero-text ."
-			". cta-button ."
-			". player-cards ."
-			"logos logos logos";
-		grid-template-rows: auto auto auto auto;
-		grid-template-columns: 1fr minmax(400px, 700px) 1fr;
-	}
-}
-
-/* Desktop Grid Layout */
-@media (min-width: 1024px) {
-	.hero-grid-container {
-		grid-template-areas:
-			". hero-text ."
-			". cta-button ."
-			". player-cards ."
-			"logos logos logos";
-		grid-template-rows: auto auto auto auto;
-		grid-template-columns: 1fr minmax(600px, 1000px) 1fr;
-	}
 
 	/* Side image pseudo-elements for desktop */
 	.hero-grid-container::before {
@@ -335,7 +299,7 @@ onDestroy(() => {
 		top: 40%;
 		width: 600px;
 		height: 600px;
-		background: url('/RuzickovaBg.png') no-repeat center;
+		/*background: url('/RuzickovaBg.png') no-repeat center;*/
 		background-size: contain;
 		transform: translateX(-35%);
 		z-index: 10;
@@ -349,47 +313,42 @@ onDestroy(() => {
 		top: 40%;
 		width: 600px;
 		height: 600px;
-		background: url('/KoptovaBg.png') no-repeat center;
+		/*background: url('/KoptovaBg.png') no-repeat center;*/
 		background-size: contain;
 		transform: translateX(25%);
 		z-index: 10;
 		pointer-events: none;
 	}
-}
 
 /* Remaining CSS classes that are still needed for complex responsive grid layouts */
 </style>
 
 <!-- NEW GRID-BASED HERO SECTION -->
-<section class="hero-wrapper pt-20 w-full overflow-x-hidden">
-	<!-- Background layer with mouse-following gradients -->
-	<div
-		class="absolute top-0 left-0 w-full h-full pointer-events-none"
-		style="z-index: 0; background:
-			radial-gradient(800px circle at {mouseX}px {mouseY}px, rgba(58, 9, 110, 0.4), transparent 70%),
-			radial-gradient(600px circle at {mouseX + 200}px {mouseY + 100}px, rgba(58, 9, 110, 0.3), transparent 70%),
-			radial-gradient(1000px circle at {mouseX - 150}px {mouseY - 100}px, rgba(58, 9, 110, 0.2), transparent 70%),
-			linear-gradient(135deg, #3a096e 0%, #1e0b40 50%, #000000 100%)"
-		onmousemove={handleMouseMove}
-		role="application"
-	></div>
+<div
+	class="w-full pt-20 pb-8"
+	onmousemove={handleMouseMove}
+	role="application"
+	style="background:
+		radial-gradient(800px circle at {mouseX}px {mouseY}px, rgba(58, 9, 110, 0.4), transparent 70%),
+		radial-gradient(600px circle at {mouseX + 200}px {mouseY + 100}px, rgba(58, 9, 110, 0.3), transparent 70%),
+		radial-gradient(1000px circle at {mouseX - 150}px {mouseY - 100}px, rgba(58, 9, 110, 0.2), transparent 70%),
+		linear-gradient(135deg, #3a096e 0%, #1e0b40 50%, #000000 100%)"
+>
 
 	<!-- Background images as actual elements -->
-	<div class="absolute -left-12 top-32 w-56 h-56 z-10 pointer-events-none opacity-50 lg:w-[600px] lg:h-[600px] lg:-left-52 lg:top-[40%] lg:opacity-100">
+	<div class="absolute left-0 top-32 w-56 h-56 z-10 pointer-events-none opacity-50 lg:w-[600px] lg:h-[600px] lg:left-0 lg:top-[40%] lg:opacity-100 lg:-translate-x-1/3">
 		<img src="/RuzickovaBg.png" alt="" class="w-full h-full object-contain" />
 	</div>
-	<div class="absolute -right-12 top-32 w-56 h-56 z-10 pointer-events-none opacity-50 lg:w-[600px] lg:h-[600px] lg:-right-40 lg:top-[40%] lg:opacity-100">
+	<div class="absolute right-0 top-32 w-56 h-56 z-10 pointer-events-none opacity-50 lg:w-[600px] lg:h-[600px] lg:right-0 lg:top-[40%] lg:opacity-100 lg:translate-x-1/4">
 		<img src="/KoptovaBg.png" alt="" class="w-full h-full object-contain" />
 	</div>
 
 	<!-- Grid container for content -->
-	<div class="hero-grid-container relative text-white overflow-visible grid m-0 p-0 z-20 gap-0
-		max-md:grid-cols-1 max-md:[grid-template-areas:'hero-text''cta-button''player-cards''logos'] max-md:[grid-template-rows:auto_auto_clamp(400px,35vh,600px)_auto]
-		md:max-lg:[grid-template-areas:'.hero-text.''.cta-button.''.player-cards.''logos_logos_logos'] md:max-lg:[grid-template-rows:auto_auto_clamp(450px,30vh,600px)_auto] md:max-lg:[grid-template-columns:1fr_minmax(400px,700px)_1fr]
-		lg:[grid-template-areas:'.hero-text.''.cta-button.''.player-cards.''logos_logos_logos'] lg:[grid-template-rows:auto_auto_clmp(500px,25vh,700px)_auto] lg:[grid-template-columns:1fr_minmax(600px,1000px)_1fr]">
+	<div class="hero-grid-container relative text-white grid m-0 p-0 z-20 gap-0 w-full
+		grid-cols-1 [grid-template-areas:'hero-text''cta-button''player-cards''logos'] [grid-template-rows:auto_auto_auto_auto]">
 		<!-- Hero text section -->
 		<div class="[grid-area:hero-text]">
-			<div class="flex flex-col items-center justify-center relative overflow-visible -space-y-8 border-2 border-dashed border-white/30">
+			<div class="flex flex-col items-center justify-center relative -space-y-8 border-2 border-dashed border-white/30">
 				<HeroTitle text="OBJEVTE" />
 				<div class="animate-breathe relative z-26">
 					<HeroTitleAccent text="ŽENSKÝ" />
@@ -412,9 +371,9 @@ onDestroy(() => {
 			</div>
 		</div>
 		<div class="[grid-area:player-cards]">
-			<div class="h-[500px] flex items-center justify-center border-2 border-dashed border-white/30 relative">
+			<div class="h-[300px] flex items-center justify-center border-2 border-dashed border-white/30 relative">
 				<div class="absolute top-2.5 left-2.5 text-xs opacity-70 z-30">PLAYER CARDS AREA</div>
-				<div class="w-full h-[340px] flex items-center justify-center relative">
+				<div class="w-full h-[280px] flex items-center justify-center relative">
 					{#each visiblePlayers as { player, index, position } (position)}
 						<PlayerCard
 							{player}
@@ -425,13 +384,13 @@ onDestroy(() => {
 				</div>
 			</div>
 		</div>
-		<div class="[grid-area:logos] bg-white z-30">
+		<!-- <div class="[grid-area:logos] bg-white z-30">
 			<div class="relative">
 				<div class="absolute top-2.5 left-2.5 text-xs opacity-70 z-30 text-gray-600 border-2 border-dashed border-black/30 px-2 py-1 bg-white/80">LOGOS AREA</div>
 				<div class="py-12 px-8">
 					<div class="text-center">
 						<!-- Traditional Brands -->
-						<h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 tracking-wider">
+						<!-- <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 tracking-wider">
 							TRADIČNÍ ZNAČKY
 						</h2>
 						<div class="flex justify-center gap-8 mb-16 flex-wrap">
@@ -439,10 +398,10 @@ onDestroy(() => {
 							<img src="/SpartaLogo.png" alt="Sparta" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
 							<img src="/SlaviaLogo.png" alt="Slavia" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
 							<img src="/SlovanLogo.png" alt="Slovan" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
-						</div>
+						</div> -->
 
 						<!-- New Stories -->
-						<h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 tracking-wider">
+						<!-- <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 tracking-wider">
 							NOVÉ PŘÍBĚHY
 						</h2>
 						<div class="flex justify-center gap-8 mb-8 flex-wrap">
@@ -450,9 +409,9 @@ onDestroy(() => {
 							<img src="/LokomotivaLogo.png" alt="Lokomotiva" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
 							<img src="/PrahaLogo.png" alt="Praha" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
 						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+					</div> -->
+				<!-- </div>
+			</div> -->
+		<!-- </div> -->
 	</div>
-</section>
+</div>
