@@ -3,6 +3,8 @@ import { onDestroy, onMount } from "svelte";
 import { slide, fade } from "svelte/transition";
 import { quintOut, cubicOut } from "svelte/easing";
 import PlayerCard from "$lib/components/PlayerCard.svelte";
+import HeroTitle from "$lib/components/HeroTitle.svelte";
+import HeroTitleAccent from "$lib/components/HeroTitleAccent.svelte";
 import type { Player, CardPosition } from "$lib/types.js";
 
 // Mouse tracking for cursor-following background
@@ -248,17 +250,22 @@ onDestroy(() => {
 	66% { transform: translateY(4px) rotate(-0.5deg); }
 }
 
+@keyframes breathe {
+	0%, 100% { transform: scale(1); }
+	50% { transform: scale(1.02); }
+}
+
 .animate-float {
 	animation: float 6s ease-in-out infinite;
 }
 
-.fontik {
-    font-family: 'SpaceMonoBold';
+.animate-breathe {
+	animation: breathe 3s ease-in-out infinite;
 }
 
-.fontik2 {
-    font-family: 'Mogra';
-}
+
+
+
 
 /* Hero Grid Layout */
 .hero-wrapper {
@@ -290,13 +297,8 @@ onDestroy(() => {
 			"cta-button"
 			"player-cards"
 			"logos";
-		grid-template-rows:
-			clamp(300px, 40vh, 500px)
-			clamp(100px, 15vh, 150px)
-			clamp(400px, 35vh, 600px)
-			auto;
+		grid-template-rows: auto auto auto auto;
 		grid-template-columns: 1fr;
-		gap: 2rem;
 	}
 }
 
@@ -308,13 +310,8 @@ onDestroy(() => {
 			". cta-button ."
 			". player-cards ."
 			"logos logos logos";
-		grid-template-rows:
-			clamp(350px, 35vh, 500px)
-			clamp(120px, 12vh, 150px)
-			clamp(450px, 30vh, 600px)
-			auto;
+		grid-template-rows: auto auto auto auto;
 		grid-template-columns: 1fr minmax(400px, 700px) 1fr;
-		gap: 2.5rem 1rem;
 	}
 }
 
@@ -326,13 +323,8 @@ onDestroy(() => {
 			". cta-button ."
 			". player-cards ."
 			"logos logos logos";
-		grid-template-rows:
-			clamp(400px, 30vh, 600px)
-			clamp(120px, 10vh, 180px)
-			clamp(500px, 25vh, 700px)
-			auto;
+		grid-template-rows: auto auto auto auto;
 		grid-template-columns: 1fr minmax(600px, 1000px) 1fr;
-		gap: 3rem 2rem;
 	}
 
 	/* Side image pseudo-elements for desktop */
@@ -365,266 +357,14 @@ onDestroy(() => {
 	}
 }
 
-/* Grid Area Classes */
-.hero-text-area {
-	grid-area: hero-text;
-}
-
-.hero-text-container {
-	height: 100%;
-	min-height: 400px;
-	display: grid;
-	grid-template-rows: 1fr 0.8fr 1fr;
-	place-items: center;
-	position: relative;
-	overflow: visible;
-	padding-top: 0;
-	margin-top: -3.5rem;
-	justify-items: center;
-}
-
-/* Hero Title Styles */
-.hero-title-1, .hero-title-2, .hero-title-3 {
-	font-size: clamp(4.5rem, 8vw, 8rem);
-	font-weight: 900;
-	line-height: 1.1;
-	letter-spacing: 0.08em;
-	margin: 0;
-	text-align: center;
-}
-
-/* Base mobile styles */
-.hero-title-1 {
-	color: white;
-	text-shadow: 7px 7px 0 black;
-	z-index: 25;
-	align-self: end;
-	transform: translateY(20px);
-}
-
-.hero-title-2 {
-	background: linear-gradient(to right, #f9a8d4, #fb7185, #ec4899);
-	background-clip: text;
-	-webkit-background-clip: text;
-	color: transparent;
-	filter: drop-shadow(5px 5px 0 black);
-	transform: rotate(-5deg) translateY(-8px);
-	z-index: 26;
-	align-self: center;
-	padding: 1rem 2rem;
-	overflow: visible;
-	line-height: 1.2;
-}
-
-.hero-title-3 {
-	color: white;
-	text-shadow: 7px 7px 0 black;
-	z-index: 25;
-	align-self: start;
-	transform: translateY(-35px);
-}
-
-/* Tablet styles */
-@media (min-width: 768px) and (max-width: 1023px) {
-	.hero-title-1 {
-		transform: translateY(25px);
-	}
-
-	.hero-title-2 {
-		transform: rotate(-5deg) translateY(-10px);
-	}
-
-	.hero-title-3 {
-		transform: translateY(-50px);
-	}
-}
-
-/* Desktop styles */
-@media (min-width: 1024px) {
-	.hero-title-1 {
-		transform: translateY(30px);
-	}
-
-	.hero-title-2 {
-		transform: rotate(-5deg) translateY(-15px);
-	}
-
-	.hero-title-3 {
-		transform: translateY(-65px);
-	}
-}
-.cta-button-area { grid-area: cta-button; }
-
-.cta-button {
-	display: inline-block;
-	padding: 1.5rem 4rem;
-	background: linear-gradient(to right, #f9a8d4, #fb7185, #ec4899);
-	color: white;
-	text-decoration: none;
-	font-weight: 700;
-	font-size: clamp(1.8rem, 2.5vw, 2rem);
-	border-radius: 9999px;
-	letter-spacing: 0.1em;
-	text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-	box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-	transition: all 0.3s ease;
-	transform: scale(1);
-}
-
-.cta-button:hover {
-	transform: scale(1.05);
-	box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
-
-.player-cards-area { grid-area: player-cards; }
-
-.player-cards-container {
-	width: 100%;
-	height: 340px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	position: relative;
-}
-.logos-area {
-	grid-area: logos;
-	background: white;
-	z-index: 30;
-	margin: 0;
-	padding: 0;
-}
-
-.logos-container {
-	padding: 3rem 2rem;
-}
+/* Remaining CSS classes that are still needed for complex responsive grid layouts */
 </style>
 
-<!-- OLD HERO SECTION - COMMENTED OUT FOR REFACTOR
-<section
-	class="min-h-screen flex flex-col justify-start items-center text-white relative overflow-hidden px-4 -mt-20 transition-all duration-1000 ease-out pb-20"
-	onmousemove={handleMouseMove}
-	role="application"
-	style="background:
-		radial-gradient(800px circle at {mouseX}px {mouseY}px, rgba(58, 9, 110, 0.4), transparent 70%),
-		radial-gradient(600px circle at {mouseX + 200}px {mouseY + 100}px, rgba(58, 9, 110, 0.3), transparent 70%),
-		radial-gradient(1000px circle at {mouseX - 150}px {mouseY - 100}px, rgba(58, 9, 110, 0.2), transparent 70%),
-		linear-gradient(135deg, #3a096e 0%, #1e0b40 50%, #000000 100%)"
->
-
-	Background images for all screen sizes
-	<div class="absolute inset-0 z-0 pointer-events-none">
-		RuzickovaBg - left side, fixed size
-		<div class="absolute left-0 top-[250px] w-[600px] h-[600px] opacity-55 lg:opacity-100 -z-10 -translate-x-[40%] lg:-translate-x-[35%]">
-			<img src="/RuzickovaBg.png" alt="Růžičková background" class="w-full h-full object-contain" />
-		</div>
-
-		KoptovaBg - right side, fixed size
-		<div class="absolute right-0 top-[250px] w-[600px] h-[600px] opacity-55 lg:opacity-100 -z-10 translate-x-[40%] lg:translate-x-[25%]">
-			<img src="/KoptovaBg.png" alt="Koptová background" class="w-full h-full object-contain" />
-		</div>
-	</div>
-
-	<div class="relative z-10 text-center pt-30">
-		<div class="relative h-48 flex items-center justify-center">
-			<div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
-				<h1 class="fontik text-[4.5rem] sm:text-[5rem] md:text-[6rem] lg:text-[7rem] xl:text-[8rem] font-black text-white leading-none tracking-[0.08em]" style="text-shadow: 7px 7px 0 black;">
-					OBJEVTE
-				</h1>
-			</div>
-
-			<div class="absolute top-1 left-1/2 transform -translate-x-1/2 -rotate-5 z-25 pt-6">
-				<h1 class="fontik2 text-[4.5rem] sm:text-[5rem] md:text-[6rem] lg:text-[7rem] xl:text-[8rem] font-black bg-gradient-to-r from-pink-300 via-pink-400 to-pink-500 bg-clip-text text-transparent leading-relaxed tracking-[0.08em] py-4" style="filter: drop-shadow(5px 5px 0 black);">
-					ŽENSKÝ
-				</h1>
-			</div>
-
-			<div class="absolute top-32 left-1/2 transform -translate-x-1/2 z-21">
-				<h1 class="fontik text-[4.5rem] sm:text-[5rem] md:text-[6rem] lg:text-[7rem] xl:text-[8rem] font-black text-white leading-none tracking-[0.08em]" style="text-shadow: 7px 7px 0 black;">
-					FOTBAL
-				</h1>
-			</div>
-		</div>
-	</div>
-
-	CTA Button - positioned between hero text and cards
-	<div class="absolute w-full flex justify-center z-10" style="top: 360px; left: 0;">
-		<a
-			href="/hub"
-			class="tracking-wider inline-block font-bold rounded-full transition-all duration-300 transform hover:scale-105 shadow-2xl bg-gradient-to-r from-pink-300 via-pink-400 to-pink-500"
-			style="padding: 24px 64px; font-size: 32px; line-height: 1; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);"
-		>
-			SPUSTIT
-		</a>
-	</div>
-
-	<div class="relative z-10 w-full max-w-5xl mx-auto" style="height: 750px;">
-		<div class="absolute w-full flex justify-center items-center" style="top: 120px; height: 340px;">
-			{#each visiblePlayers as { player, index, position } (position)}
-				<PlayerCard
-					{player}
-					{position}
-					onClick={() => goToPlayer(index)}
-				/>
-			{/each}
-		</div>
-	</div>
-
-	Logos section - positioned below cards
-	<div class="absolute w-full" style="top: 850px; left: 0;">
-		<div class="bg-white px-4 py-12">
-			<div class="text-center">
-				Traditional Brands
-				<h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 tracking-wider">
-					TRADIČNÍ ZNAČKY
-				</h2>
-				<div class="flex justify-center gap-8 mb-16 flex-wrap">
-					<img src="/BanikLogo.png" alt="Baník" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
-					<img src="/SpartaLogo.png" alt="Sparta" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
-					<img src="/SlaviaLogo.png" alt="Slavia" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
-					<img src="/SlovanLogo.png" alt="Slovan" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
-				</div>
-
-				New Stories
-				<h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 tracking-wider">
-					NOVÉ PŘÍBĚHY
-				</h2>
-				<div class="flex justify-center gap-8 mb-8 flex-wrap">
-					<img src="/RaptorsLogo.png" alt="Raptors" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
-					<img src="/LokomotivaLogo.png" alt="Lokomotiva" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
-					<img src="/PrahaLogo.png" alt="Praha" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
-				</div>
-			</div>
-		</div>
-	</div>
-
-	Side navigation arrows
-	<button
-		onclick={previousPlayerNav}
-		class="absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all duration-300 shadow-md hover:shadow-lg hover:scale-110 z-30"
-		aria-label="Předchozí hráčka"
-	>
-		<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-		</svg>
-	</button>
-
-	<button
-		onclick={nextPlayerNav}
-		class="absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all duration-300 shadow-md hover:shadow-lg hover:scale-110 z-30"
-		aria-label="Následující hráčka"
-	>
-		<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-		</svg>
-	</button>
-</section>
--->
-
 <!-- NEW GRID-BASED HERO SECTION -->
-<section class="hero-wrapper">
+<section class="hero-wrapper pt-20 w-full overflow-x-hidden">
 	<!-- Background layer with mouse-following gradients -->
 	<div
-		class="hero-background"
+		class="absolute top-0 left-0 w-full h-full pointer-events-none"
 		style="z-index: 0; background:
 			radial-gradient(800px circle at {mouseX}px {mouseY}px, rgba(58, 9, 110, 0.4), transparent 70%),
 			radial-gradient(600px circle at {mouseX + 200}px {mouseY + 100}px, rgba(58, 9, 110, 0.3), transparent 70%),
@@ -634,31 +374,47 @@ onDestroy(() => {
 		role="application"
 	></div>
 
+	<!-- Background images as actual elements -->
+	<div class="absolute -left-12 top-32 w-56 h-56 z-10 pointer-events-none opacity-50 lg:w-[600px] lg:h-[600px] lg:-left-52 lg:top-[40%] lg:opacity-100">
+		<img src="/RuzickovaBg.png" alt="" class="w-full h-full object-contain" />
+	</div>
+	<div class="absolute -right-12 top-32 w-56 h-56 z-10 pointer-events-none opacity-50 lg:w-[600px] lg:h-[600px] lg:-right-40 lg:top-[40%] lg:opacity-100">
+		<img src="/KoptovaBg.png" alt="" class="w-full h-full object-contain" />
+	</div>
+
 	<!-- Grid container for content -->
-	<div class="hero-grid-container relative text-white overflow-hidden">
-		<!-- Temporary content to establish proper height -->
-		<div class="hero-text-area">
-			<div class="hero-text-container">
-				<h1 class="hero-title-1 fontik">OBJEVTE</h1>
-				<h1 class="hero-title-2 fontik2">ŽENSKÝ</h1>
-				<h1 class="hero-title-3 fontik">FOTBAL</h1>
+	<div class="hero-grid-container relative text-white overflow-visible grid m-0 p-0 z-20 gap-0
+		max-md:grid-cols-1 max-md:[grid-template-areas:'hero-text''cta-button''player-cards''logos'] max-md:[grid-template-rows:auto_auto_clamp(400px,35vh,600px)_auto]
+		md:max-lg:[grid-template-areas:'.hero-text.''.cta-button.''.player-cards.''logos_logos_logos'] md:max-lg:[grid-template-rows:auto_auto_clamp(450px,30vh,600px)_auto] md:max-lg:[grid-template-columns:1fr_minmax(400px,700px)_1fr]
+		lg:[grid-template-areas:'.hero-text.''.cta-button.''.player-cards.''logos_logos_logos'] lg:[grid-template-rows:auto_auto_clmp(500px,25vh,700px)_auto] lg:[grid-template-columns:1fr_minmax(600px,1000px)_1fr]">
+		<!-- Hero text section -->
+		<div class="[grid-area:hero-text]">
+			<div class="flex flex-col items-center justify-center relative overflow-visible -space-y-8 border-2 border-dashed border-white/30">
+				<HeroTitle text="OBJEVTE" />
+				<div class="animate-breathe relative z-26">
+					<HeroTitleAccent text="ŽENSKÝ" />
+				</div>
+				<div class="-mt-2">
+					<HeroTitle text="FOTBAL" />
+				</div>
 			</div>
 		</div>
-		<div class="cta-button-area">
-			<div style="height: 120px; display: flex; align-items: center; justify-content: center; border: 2px dashed rgba(255,255,255,0.3); position: relative;">
-				<div style="position: absolute; top: 10px; left: 10px; font-size: 0.8rem; opacity: 0.7; z-index: 30;">CTA BUTTON AREA</div>
+		<!-- CTA button section -->
+		<div class="[grid-area:cta-button]">
+			<div class="h-30 flex items-center justify-center border-2 border-dashed border-white/30 relative">
+				<div class="absolute top-2.5 left-2.5 text-xs opacity-70 z-30">CTA BUTTON AREA</div>
 				<a
 					href="/hub"
-					class="cta-button"
+					class="inline-block py-4 px-12 bg-gradient-to-r from-pink-300 via-pink-400 to-pink-500 text-white no-underline font-bold text-[clamp(1.2rem,2vw,1.5rem)] rounded-full tracking-widest shadow-[1px_1px_2px_rgba(0,0,0,0.3)] drop-shadow-[0_20px_25px_rgba(0,0,0,0.1)] transition-all duration-300 hover:scale-105 hover:drop-shadow-[0_25px_50px_rgba(0,0,0,0.25)]"
 				>
 					SPUSTIT
 				</a>
 			</div>
 		</div>
-		<div class="player-cards-area">
-			<div style="height: 500px; display: flex; align-items: center; justify-content: center; border: 2px dashed rgba(255,255,255,0.3); position: relative;">
-				<div style="position: absolute; top: 10px; left: 10px; font-size: 0.8rem; opacity: 0.7; z-index: 30;">PLAYER CARDS AREA</div>
-				<div class="player-cards-container">
+		<div class="[grid-area:player-cards]">
+			<div class="h-[500px] flex items-center justify-center border-2 border-dashed border-white/30 relative">
+				<div class="absolute top-2.5 left-2.5 text-xs opacity-70 z-30">PLAYER CARDS AREA</div>
+				<div class="w-full h-[340px] flex items-center justify-center relative">
 					{#each visiblePlayers as { player, index, position } (position)}
 						<PlayerCard
 							{player}
@@ -669,10 +425,10 @@ onDestroy(() => {
 				</div>
 			</div>
 		</div>
-		<div class="logos-area">
-			<div style="position: relative;">
-				<div style="position: absolute; top: 10px; left: 10px; font-size: 0.8rem; opacity: 0.7; z-index: 30; color: #666; border: 2px dashed rgba(0,0,0,0.3); padding: 4px 8px; background: rgba(255,255,255,0.8);">LOGOS AREA</div>
-				<div class="logos-container">
+		<div class="[grid-area:logos] bg-white z-30">
+			<div class="relative">
+				<div class="absolute top-2.5 left-2.5 text-xs opacity-70 z-30 text-gray-600 border-2 border-dashed border-black/30 px-2 py-1 bg-white/80">LOGOS AREA</div>
+				<div class="py-12 px-8">
 					<div class="text-center">
 						<!-- Traditional Brands -->
 						<h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 tracking-wider">

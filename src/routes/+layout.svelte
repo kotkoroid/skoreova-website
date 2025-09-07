@@ -43,8 +43,8 @@ if (typeof window !== "undefined") {
 {#if isHomepage}
   <!-- Homepage Layout: Overlay Header + Full Width Content + Footer -->
   <div class="relative">
-    <!-- Header - Sticky positioned to overlay content -->
-    <header class="sticky top-0 backdrop-blur-md shadow-sm z-50 transition-all duration-300 ease-in-out" style="background: transparent;">
+    <!-- Header - Fixed positioned to overlay content -->
+    <header class="fixed top-0 left-0 right-0 backdrop-blur-md shadow-sm z-50 transition-all duration-300 ease-in-out" style="background: transparent;">
       <div class="max-w-7xl mx-auto px-4">
         <div class="flex justify-between items-center h-20">
           <div class="flex items-center space-x-3">
@@ -83,7 +83,7 @@ if (typeof window !== "undefined") {
         </div>
 
         <!-- Mobile & Tablet Navigation Menu - Extended within header -->
-        <div class="lg:hidden transition-all duration-300 ease-in-out {$isMobileMenuOpen ? 'opacity-100 max-h-40' : 'opacity-0 max-h-0 overflow-hidden'}">
+        <div class="lg:hidden transition-all duration-300 ease-in-out backdrop-blur-md {$isMobileMenuOpen ? 'opacity-100 max-h-40' : 'opacity-0 max-h-0 overflow-hidden'}" style="background: transparent;">
           <nav class="px-0 pt-2 pb-4 space-y-1">
             <!-- Social Links -->
             <div class="flex items-center justify-center space-x-6 py-2">
