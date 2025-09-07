@@ -44,7 +44,7 @@ if (typeof window !== "undefined") {
   <!-- Homepage Layout: Overlay Header + Full Width Content + Footer -->
   <div class="relative">
     <!-- Header - Sticky positioned to overlay content -->
-    <header class="sticky top-0 backdrop-blur-md shadow-sm z-50" style="background: linear-gradient(135deg, rgba(58, 9, 110, 0.6) 0%, rgba(30, 11, 64, 0.6) 50%, rgba(0, 0, 0, 0.6) 100%)">
+    <header class="sticky top-0 backdrop-blur-md shadow-sm z-50 transition-all duration-300 ease-in-out" style="background: transparent;">
       <div class="max-w-7xl mx-auto px-4">
         <div class="flex justify-between items-center h-20">
           <div class="flex items-center space-x-3">
@@ -53,31 +53,20 @@ if (typeof window !== "undefined") {
               <img src="/Logo.png" alt="Skóreová logo" class="w-15 h-15" style="cursor: pointer !important;" />
             </a>
             <!-- Header text as link -->
-            <a href="/" class="fontik text-2xl tracking-wider font-semibold text-white hover:text-blue-400 transition-colors uppercase" style="cursor: pointer !important;">
+            <a href="/" class="fontik text-3xl min-[480px]:text-3xl sm:text-3xl md:text-3xl lg:text-3xl xl:text-3xl tracking-wider font-semibold text-white hover:text-blue-400 transition-colors uppercase" style="cursor: pointer !important;">
               Skóreová
             </a>
           </div>
 
-          <!-- Desktop Navigation (1024px+) -->
-          <nav class="hidden lg:flex space-x-8">
-            <a href="/articles" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Články</a>
-            <a href="/about" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Hráčky</a>
-            <a href="/results" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Výsledky</a>
-            <a href="/contact" class="text-white/90 hover:text-blue-400 px-3 py-2 text-sm font-medium uppercase">Kontakt</a>
-          </nav>
-
           <!-- Social Icons - Desktop Only (1024px+) -->
           <div class="hidden lg:flex items-center space-x-4">
-
-            <a href="https://x.com" class="text-white/90 hover:text-blue-400 p-2" aria-label="X (Twitter)">
+            <a href="https://x.com/Skoreova" class="text-white/90 hover:text-blue-400 p-2" aria-label="X (Twitter)">
               <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
               </svg>
             </a>
-            <a href="https://threads.net" class="text-white/90 hover:text-blue-400 p-2" aria-label="Threads">
-              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 192 192">
-                <path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6116 63.5383 90.6052 61.6848 97.2286 61.6848C97.3051 61.6848 97.3819 61.6848 97.4576 61.6855C105.707 61.7381 111.932 64.1366 115.961 68.814C118.893 72.2193 120.854 76.925 121.825 82.8638C114.511 81.6207 106.601 81.2385 98.145 81.7233C74.3247 83.0954 59.0111 96.9879 60.0396 116.292C60.5615 126.084 65.4397 134.508 73.775 140.011C80.8224 144.663 89.899 146.938 99.3323 146.423C111.79 145.74 121.563 140.987 128.381 132.296C133.559 125.696 136.834 117.143 138.28 106.366C144.217 109.949 148.617 114.664 151.047 120.332C155.179 129.967 155.42 145.8 142.501 158.708C131.182 170.016 117.576 174.908 97.0135 175.059C74.2042 175.252 56.9538 167.58 46.7381 151.045C38.746 138.182 36.1138 120.37 39.2777 99.2963C43.5655 69.8061 63.6651 47.5572 97.2374 44.8323C97.3355 44.8323 97.4336 44.8323 97.5317 44.8323C140.035 44.8323 149.49 86.4426 141.537 88.9883Z"/>
-              </svg>
+            <a href="https://threads.com/@skoreova" class="text-white/90 hover:text-blue-400 p-2" aria-label="Threads">
+              <img src="/Threads.svg" alt="Threads" class="h-5 w-5 filter brightness-0 invert" />
             </a>
           </div>
 
@@ -88,35 +77,27 @@ if (typeof window !== "undefined") {
               class="text-white/90 hover:text-white focus:outline-none focus:text-white p-2 relative"
               aria-label="Toggle menu"
             >
-              <img src={$isMobileMenuOpen ? "/Close.svg" : "/Menu.svg"} alt={$isMobileMenuOpen ? "Close menu" : "Open menu"} class="w-8 h-8 transition-all duration-300 ease-in-out" />
+              <img src={$isMobileMenuOpen ? "/Close.svg" : "/Menu.svg"} alt={$isMobileMenuOpen ? "Close menu" : "Open menu"} class="w-12 h-12 transition-all duration-300 ease-in-out" style="transform: rotate({$isMobileMenuOpen ? '90deg' : '0deg'});" />
             </button>
           </div>
         </div>
-      </div>
 
-      <!-- Mobile & Tablet Navigation Menu -->
-      <div class="lg:hidden absolute top-20 left-0 right-0 z-40 transition-all duration-300 ease-in-out backdrop-blur-md bg-black/30 {$isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}">
-        <nav class="px-4 pt-2 pb-4 space-y-1">
-          <a href="/hub" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Hub</a>
-          <a href="/contact" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Kontakt</a>
-
-          <!-- Social Links Separator -->
-          <div class="border-t border-white/20 my-3"></div>
-
-          <!-- Social Links -->
-          <div class="flex items-center justify-center space-x-6 py-2">
-            <a href="https://x.com" class="text-white/90 hover:text-blue-400 p-2 transition-colors duration-200" aria-label="X (Twitter)">
-              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-              </svg>
-            </a>
-            <a href="https://threads.net" class="text-white/90 hover:text-blue-400 p-2 transition-colors duration-200" aria-label="Threads">
-              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 192 192">
-                <path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6116 63.5383 90.6052 61.6848 97.2286 61.6848C97.3051 61.6848 97.3819 61.6848 97.4576 61.6855C105.707 61.7381 111.932 64.1366 115.961 68.814C118.893 72.2193 120.854 76.925 121.825 82.8638C114.511 81.6207 106.601 81.2385 98.145 81.7233C74.3247 83.0954 59.0111 96.9879 60.0396 116.292C60.5615 126.084 65.4397 134.508 73.775 140.011C80.8224 144.663 89.899 146.938 99.3323 146.423C111.79 145.74 121.563 140.987 128.381 132.296C133.559 125.696 136.834 117.143 138.28 106.366C144.217 109.949 148.617 114.664 151.047 120.332C155.179 129.967 155.42 145.8 142.501 158.708C131.182 170.016 117.576 174.908 97.0135 175.059C74.2042 175.252 56.9538 167.58 46.7381 151.045C38.746 138.182 36.1138 120.37 39.2777 99.2963C43.5655 69.8061 63.6651 47.5572 97.2374 44.8323C97.3355 44.8323 97.4336 44.8323 97.5317 44.8323C140.035 44.8323 149.49 86.4426 141.537 88.9883Z"/>
-              </svg>
-            </a>
-          </div>
-        </nav>
+        <!-- Mobile & Tablet Navigation Menu - Extended within header -->
+        <div class="lg:hidden transition-all duration-300 ease-in-out {$isMobileMenuOpen ? 'opacity-100 max-h-40' : 'opacity-0 max-h-0 overflow-hidden'}">
+          <nav class="px-0 pt-2 pb-4 space-y-1">
+            <!-- Social Links -->
+            <div class="flex items-center justify-center space-x-6 py-2">
+              <a href="https://x.com" class="text-white/90 hover:text-blue-400 p-2 transition-colors duration-200" aria-label="X (Twitter)">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+              <a href="https://threads.net" class="text-white/90 hover:text-blue-400 p-2 transition-colors duration-200" aria-label="Threads">
+                <img src="/Threads.svg" alt="Threads" class="h-6 w-6 filter brightness-0 invert" />
+              </a>
+            </div>
+          </nav>
+        </div>
       </div>
     </header>
 
@@ -148,7 +129,7 @@ if (typeof window !== "undefined") {
   >
     <div class="min-h-screen relative z-10">
       <!-- Header -->
-      <header class="backdrop-blur-sm shadow-sm sticky top-0 z-50" style="background-color: rgba(17, 24, 39, 0.8);">
+      <header class="backdrop-blur-md shadow-sm sticky top-0 z-50" style="background-color: rgba(17, 24, 39, 0.8);">
         <div class="max-w-7xl mx-auto px-6">
           <div class="flex justify-between items-center h-20">
             <div class="flex items-center space-x-3">
@@ -176,9 +157,7 @@ if (typeof window !== "undefined") {
                 </svg>
               </a>
               <a href="https://threads.net" class="text-white/90 hover:text-blue-400 p-3 lg:p-4 xl:p-5" aria-label="Threads">
-                <svg class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8" fill="currentColor" viewBox="0 0 192 192">
-                  <path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6116 63.5383 90.6052 61.6848 97.2286 61.6848C97.3051 61.6848 97.3819 61.6848 97.4576 61.6855C105.707 61.7381 111.932 64.1366 115.961 68.814C118.893 72.2193 120.854 76.925 121.825 82.8638C114.511 81.6207 106.601 81.2385 98.145 81.7233C74.3247 83.0954 59.0111 96.9879 60.0396 116.292C60.5615 126.084 65.4397 134.508 73.775 140.011C80.8224 144663 89.899 146.938 99.3323 146.423C111.79 145.74 121.563 140.987 128.381 132.296C133.559 125.696 136.834 117.143 138.28 106.366C144.217 109.949 148.617 114.664 151.047 120.332C155.179 129.967 155.42 145.8 142.501 158.708C131.182 170.016 117.576 174.908 97.0135 175.059C74.2042 175.252 56.9538 167.58 46.7381 151.045C38.746 138.182 36.1138 120.37 39.2777 99.2963C43.5655 69.8061 63.6651 47.5572 97.2374 44.8323C97.3355 44.8323 97.4336 44.8323 97.5317 44.8323C140.035 44.8323 149.49 86.4426 141.537 88.9883Z"/>
-                </svg>
+                <img src="/Threads.svg" alt="Threads" class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8 filter brightness-0 invert" />
               </a>
             </div>
 
@@ -189,14 +168,14 @@ if (typeof window !== "undefined") {
                 class="text-white/90 hover:text-white focus:outline-none focus:text-white p-2 relative"
                 aria-label="Toggle menu"
               >
-                <img src={$isMobileMenuOpen ? "/Close.svg" : "/Menu.svg"} alt={$isMobileMenuOpen ? "Close menu" : "Open menu"} class="w-10 h-10 min-[480px]:w-11 min-[480px]:h-11 sm:w-12 sm:h-12 md:w-13 md:h-13 lg:w-14 lg:h-14 transition-all duration-300 ease-in-out" />
+                <img src={$isMobileMenuOpen ? "/Close.svg" : "/Menu.svg"} alt={$isMobileMenuOpen ? "Close menu" : "Open menu"} class="w-12 h-12 min-[480px]:w-14 min-[480px]:h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 transition-all duration-300 ease-in-out" style="transform: rotate({$isMobileMenuOpen ? '90deg' : '0deg'});" />
               </button>
             </div>
           </div>
         </div>
 
         <!-- Mobile & Tablet Navigation Menu -->
-        <div class="lg:hidden absolute top-20 left-0 right-0 z-40 transition-all duration-300 ease-in-out backdrop-blur-sm {$isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}" style="background-color: rgba(17, 24, 39, 0.8);">
+        <div class="lg:hidden absolute top-20 left-0 right-0 z-40 transition-all duration-300 ease-in-out backdrop-blur-md shadow-sm {$isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}" style="background-color: rgba(17, 24, 39, 0.8);">
           <nav class="px-4 pt-2 pb-4 space-y-1">
             <a href="/hub" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Hub</a>
             <a href="/contact" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Kontakt</a>
@@ -212,9 +191,7 @@ if (typeof window !== "undefined") {
                 </svg>
               </a>
               <a href="https://threads.net" class="text-white/90 hover:text-blue-400 p-2 transition-colors duration-200" aria-label="Threads">
-                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 192 192">
-                  <path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6116 63.5383 90.6052 61.6848 97.2286 61.6848C97.3051 61.6848 97.3819 61.6848 97.4576 61.6855C105.707 61.7381 111.932 64.1366 115.961 68.814C118.893 72.2193 120.854 76.925 121.825 82.8638C114.511 81.6207 106.601 81.2385 98.145 81.7233C74.3247 83.0954 59.0111 96.9879 60.0396 116.292C60.5615 126.084 65.4397 134.508 73.775 140.011C80.8224 144.663 89.899 146.938 99.3323 146.423C111.79 145.74 121.563 140.987 128.381 132.296C133.559 125.696 136.834 117.143 138.28 106.366C144.217 109.949 148.617 114.664 151.047 120.332C155.179 129.967 155.42 145.8 142.501 158.708C131.182 170.016 117.576 174.908 97.0135 175.059C74.2042 175.252 56.9538 167.58 46.7381 151.045C38.746 138.182 36.1138 120.37 39.2777 99.2963C43.5655 69.8061 63.6651 47.5572 97.2374 44.8323C97.3355 44.8323 97.4336 44.8323 97.5317 44.8323C140.035 44.8323 149.49 86.4426 141.537 88.9883Z"/>
-                </svg>
+                <img src="/ThreadsLogo.svg" alt="Threads" class="h-6 w-6 filter brightness-0 invert" />
               </a>
             </div>
           </nav>

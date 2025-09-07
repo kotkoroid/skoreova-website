@@ -276,12 +276,12 @@ onDestroy(() => {
 	<!-- Background images for all screen sizes -->
 	<div class="absolute inset-0 z-0 pointer-events-none">
 		<!-- RuzickovaBg - left side, fixed size -->
-		<div class="absolute -left-10 top-[250px] w-[600px] h-[600px] opacity-55 lg:opacity-100 -z-10 -translate-x-[40%]">
+		<div class="absolute left-0 top-[250px] w-[600px] h-[600px] opacity-55 lg:opacity-100 -z-10 -translate-x-[40%] lg:-translate-x-[35%]">
 			<img src="/RuzickovaBg.png" alt="Růžičková background" class="w-full h-full object-contain" />
 		</div>
 
 		<!-- KoptovaBg - right side, fixed size -->
-		<div class="absolute right-0 top-[250px] w-[600px] h-[600px] opacity-55 lg:opacity-100 -z-10 translate-x-[40%]">
+		<div class="absolute right-0 top-[250px] w-[600px] h-[600px] opacity-55 lg:opacity-100 -z-10 translate-x-[40%] lg:translate-x-[25%]">
 			<img src="/KoptovaBg.png" alt="Koptová background" class="w-full h-full object-contain" />
 		</div>
 	</div>
