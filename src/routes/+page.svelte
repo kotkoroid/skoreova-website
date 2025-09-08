@@ -327,7 +327,7 @@ onDestroy(() => {
 
 <!-- NEW GRID-BASED HERO SECTION -->
 <div
-	class="w-full pt-20 pb-8 relative"
+	class="w-full h-screen pt-20 pb-8 relative flex items-center"
 	onmousemove={handleMouseMove}
 	role="application"
 	style="background:
@@ -338,16 +338,16 @@ onDestroy(() => {
 >
 
 	<!-- Background images positioned at the sides -->
-	<div class="absolute -left-62 w-[500px] h-[500px] z-10 pointer-events-none lg:w-[1200px] lg:h-[1200px] lg:-left-96 lg:top-[40%]" style="bottom: 200px;">
+	<div class="absolute -left-62 w-[500px] h-[500px] z-10 pointer-events-none lg:w-[1200px] lg:h-[1200px] lg:-left-96 lg:top-[40%] hidden" style="bottom: 200px;">
 		<img src="/RuzickovaBg.png" alt="" class="w-full h-full object-contain" />
 	</div>
-	<div class="absolute -right-52 w-[500px] h-[500px] z-10 pointer-events-none lg:w-[1200px] lg:h-[1200px] lg:-right-96 lg:top-[40%]" style="bottom: 200px;">
+	<div class="absolute -right-52 w-[500px] h-[500px] z-10 pointer-events-none lg:w-[1200px] lg:h-[1200px] lg:-right-96 lg:top-[40%] hidden" style="bottom: 200px;">
 		<img src="/KoptovaBg.png" alt="" class="w-full h-full object-contain" />
 	</div>
 
 	<!-- Grid container for content -->
-	<div class="hero-grid-container relative text-white grid m-0 p-0 z-20 gap-0 w-full
-		grid-cols-1 [grid-template-areas:'hero-text''cta-button''player-cards''new-section''logos'] [grid-template-rows:auto_auto_auto_auto_auto]">
+	<div class="hero-grid-container relative text-white grid m-0 p-0 z-20 gap-0 w-full flex-1
+		grid-cols-1 [grid-template-areas:'hero-text''cta-button''player-cards''new-section''logos'] [grid-template-rows:auto_auto_auto_auto_auto] justify-center items-center">
 		<!-- Hero text section -->
 		<div class="[grid-area:hero-text]">
 			<div class="flex flex-col items-center justify-center relative -space-y-11">
@@ -365,13 +365,13 @@ onDestroy(() => {
 			<div class="h-30 flex items-center justify-center relative">
 				<a
 					href="/hub"
-					class="inline-block py-4 px-12 bg-gradient-to-r from-pink-300 via-pink-400 to-pink-500 text-white no-underline font-bold text-[clamp(1.2rem,2vw,1.5rem)] rounded-full tracking-widest shadow-[1px_1px_2px_rgba(0,0,0,0.3)] drop-shadow-[0_20px_25px_rgba(0,0,0,0.1)] transition-all duration-300 hover:scale-105 hover:drop-shadow-[0_25px_50px_rgba(0,0,0,0.25)]"
+					class="inline-block py-4 px-12 bg-gray-500 text-white no-underline font-bold text-[clamp(1.2rem,2vw,1.5rem)] rounded-full tracking-widest shadow-[1px_1px_2px_rgba(0,0,0,0.3)] drop-shadow-[0_20px_25px_rgba(0,0,0,0.1)] cursor-default pointer-events-none"
 				>
-					SPUSTIT
+					JIŽ BRZY
 				</a>
 			</div>
 		</div>
-		<div class="[grid-area:player-cards]">
+		<div class="[grid-area:player-cards] hidden">
 			<div class="h-[300px] flex items-center justify-center relative">
 				<div class="w-full h-[280px] flex items-center justify-center relative">
 					{#each visiblePlayers as { player, index, position } (position)}
@@ -386,7 +386,7 @@ onDestroy(() => {
 		</div>
 
 		<!-- New section -->
-		<div class="[grid-area:new-section]">
+		<div class="[grid-area:new-section] hidden">
 			<div class="h-40 flex items-center justify-center relative">
 				<div class="text-center">
 					<h3 class="text-2xl font-bold mb-4">New Section</h3>
