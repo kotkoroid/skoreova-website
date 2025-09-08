@@ -3,6 +3,8 @@ import "../app.css";
 import { browser } from "$app/environment";
 import { page } from "$app/state";
 import { isMobileMenuOpen } from "$lib/stores.js";
+import IconX from "$lib/components/IconX.svelte";
+import IconThreads from "$lib/components/IconThreads.svelte";
 
 const { children } = $props();
 let mouseX = $state(0);
@@ -46,26 +48,24 @@ if (typeof window !== "undefined") {
     <header class="fixed top-0 left-0 right-0 backdrop-blur-md shadow-sm z-50 transition-all duration-300 ease-in-out" style="background: transparent;">
       <div class="max-w-7xl mx-auto px-4">
         <div class="flex justify-between items-center h-20">
-          <div class="flex items-center space-x-3">
+          <div class="flex items-center space-x-3 brand-group">
             <!-- Logo placeholder -->
             <a href="/" class="flex items-center" style="cursor: pointer !important;">
-              <img src="/Logo.png" alt="Skóreová logo" class="w-15 h-15" style="cursor: pointer !important;" />
+              <img src="/Logo.svg" alt="Skóreová logo" class="w-14 h-14 bg-white rounded-full p-0 logo-circle" style="cursor: pointer !important;" />
             </a>
             <!-- Header text as link -->
-            <a href="/" class="fontik text-3xl min-[480px]:text-3xl sm:text-3xl md:text-3xl lg:text-3xl xl:text-3xl tracking-wider font-semibold text-white hover:text-blue-400 transition-colors uppercase" style="cursor: pointer !important;">
+            <a href="/" class="fontik text-3xl min-[480px]:text-3xl sm:text-3xl md:text-3xl lg:text-3xl xl:text-3xl tracking-wider font-semibold transition-all duration-500 uppercase gradient-text" style="cursor: pointer !important;">
               Skóreová
             </a>
           </div>
 
           <!-- Social Icons - Desktop Only (1024px+) -->
           <div class="hidden lg:flex items-center space-x-4">
-            <a href="https://x.com/Skoreova" class="text-white/90 hover:text-blue-400 p-2" aria-label="X (Twitter)">
-              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-              </svg>
+            <a href="https://x.com/Skoreova" class="gradient-icon p-2" aria-label="X">
+              <IconX class="h-5 w-5" />
             </a>
-            <a href="https://threads.com/@skoreova" class="text-white/90 hover:text-blue-400 p-2" aria-label="Threads">
-              <img src="/Threads.svg" alt="Threads" class="h-5 w-5 filter brightness-0 invert" />
+            <a href="https://threads.com/@skoreova" class="gradient-icon p-2" aria-label="Threads">
+              <IconThreads class="h-5 w-5" />
             </a>
           </div>
 
@@ -73,10 +73,11 @@ if (typeof window !== "undefined") {
           <div class="lg:hidden ml-4">
             <button
               onclick={toggleMobileMenu}
-              class="text-white/90 hover:text-white focus:outline-none focus:text-white p-2 relative"
+              class="gradient-icon-button p-2 relative"
               aria-label="Toggle menu"
             >
-              <img src={$isMobileMenuOpen ? "/Close.svg" : "/Menu.svg"} alt={$isMobileMenuOpen ? "Close menu" : "Open menu"} class="w-12 h-12 transition-all duration-300 ease-in-out" style="transform: rotate({$isMobileMenuOpen ? '90deg' : '0deg'});" />
+              <img src={$isMobileMenuOpen ? "/Close.svg" : "/Menu.svg"} alt={$isMobileMenuOpen ? "Close menu" : "Open menu"} class="hamburger-icon w-12 h-12 transition-all duration-300 ease-in-out" style="transform: rotate({$isMobileMenuOpen ? '90deg' : '0deg'});" />
+              <img src={$isMobileMenuOpen ? "/Close.svg" : "/Menu.svg"} alt={$isMobileMenuOpen ? "Close menu" : "Open menu"} class="hamburger-icon-gradient w-12 h-12 absolute top-2 left-2 transition-all duration-300 ease-in-out" style="transform: rotate({$isMobileMenuOpen ? '90deg' : '0deg'});" />
             </button>
           </div>
         </div>
@@ -86,13 +87,11 @@ if (typeof window !== "undefined") {
           <nav class="px-0 pt-2 pb-4 space-y-1">
             <!-- Social Links -->
             <div class="flex items-center justify-center space-x-6 py-2">
-              <a href="https://x.com" class="text-white/90 hover:text-blue-400 p-2 transition-colors duration-200" aria-label="X (Twitter)">
-                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
+              <a href="https://x.com/Skoreova" class="gradient-icon p-2" aria-label="X">
+                <IconX class="h-6 w-6" />
               </a>
-              <a href="https://threads.net" class="text-white/90 hover:text-blue-400 p-2 transition-colors duration-200" aria-label="Threads">
-                <img src="/Threads.svg" alt="Threads" class="h-6 w-6 filter brightness-0 invert" />
+              <a href="https://threads.com/@skoreova" class="gradient-icon p-2" aria-label="Threads">
+                <IconThreads class="h-6 w-6" />
               </a>
             </div>
           </nav>
@@ -130,13 +129,13 @@ if (typeof window !== "undefined") {
       <header class="backdrop-blur-md shadow-sm sticky top-0 z-50" style="background-color: rgba(17, 24, 39, 0.8);">
         <div class="max-w-7xl mx-auto px-6">
           <div class="flex justify-between items-center h-20">
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-3 brand-group">
               <!-- Logo placeholder -->
               <a href="/" class="flex items-center">
-                <img src="/Logo.png" alt="Skóreová logo" class="w-12 h-12 min-[480px]:w-14 min-[480px]:h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 xl:w-24 xl:h-24" />
+                <img src="/Logo.svg" alt="Skóreová logo" class="w-12 h-12 min-[480px]:w-14 min-[480px]:h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 xl:w-24 xl:h-24 bg-white rounded-full p-0 logo-circle" />
               </a>
               <!-- Header text as link -->
-              <a href="/" class="text-lg min-[480px]:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-white hover:text-blue-400 transition-colors uppercase hidden min-[320px]:block">
+              <a href="/" class="text-lg min-[480px]:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold transition-all duration-500 uppercase hidden min-[320px]:block gradient-text">
                 Skóreová
               </a>
             </div>
@@ -149,13 +148,11 @@ if (typeof window !== "undefined") {
 
             <!-- Social Icons - Desktop Only (1024px+) -->
             <div class="hidden lg:flex items-center space-x-3 xl:space-x-5">
-              <a href="https://x.com" class="text-white/90 hover:text-blue-400 p-3 lg:p-4 xl:p-5" aria-label="X (Twitter)">
-                <svg class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
+              <a href="https://x.com/Skoreova" class="gradient-icon p-3 lg:p-4 xl:p-5" aria-label="X">
+                <IconX class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8" />
               </a>
-              <a href="https://threads.net" class="text-white/90 hover:text-blue-400 p-3 lg:p-4 xl:p-5" aria-label="Threads">
-                <img src="/Threads.svg" alt="Threads" class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8 filter brightness-0 invert" />
+              <a href="https://threads.com/@skoreova" class="gradient-icon p-3 lg:p-4 xl:p-5" aria-label="Threads">
+                <IconThreads class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8" />
               </a>
             </div>
 
@@ -163,10 +160,11 @@ if (typeof window !== "undefined") {
             <div class="lg:hidden ml-4">
               <button
                 onclick={toggleMobileMenu}
-                class="text-white/90 hover:text-white focus:outline-none focus:text-white p-2 relative"
+                class="gradient-icon-button p-2 relative"
                 aria-label="Toggle menu"
               >
-                <img src={$isMobileMenuOpen ? "/Close.svg" : "/Menu.svg"} alt={$isMobileMenuOpen ? "Close menu" : "Open menu"} class="w-12 h-12 min-[480px]:w-14 min-[480px]:h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 transition-all duration-300 ease-in-out" style="transform: rotate({$isMobileMenuOpen ? '90deg' : '0deg'});" />
+                <img src={$isMobileMenuOpen ? "/Close.svg" : "/Menu.svg"} alt={$isMobileMenuOpen ? "Close menu" : "Open menu"} class="hamburger-icon w-12 h-12 min-[480px]:w-14 min-[480px]:h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 transition-all duration-300 ease-in-out" style="transform: rotate({$isMobileMenuOpen ? '90deg' : '0deg'});" />
+                <img src={$isMobileMenuOpen ? "/Close.svg" : "/Menu.svg"} alt={$isMobileMenuOpen ? "Close menu" : "Open menu"} class="hamburger-icon-gradient w-12 h-12 min-[480px]:w-14 min-[480px]:h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 absolute top-2 left-2 transition-all duration-300 ease-in-out" style="transform: rotate({$isMobileMenuOpen ? '90deg' : '0deg'});" />
               </button>
             </div>
           </div>
@@ -183,13 +181,13 @@ if (typeof window !== "undefined") {
 
             <!-- Social Links -->
             <div class="flex items-center justify-center space-x-6 py-2">
-              <a href="https://x.com" class="text-white/90 hover:text-blue-400 p-2 transition-colors duration-200" aria-label="X (Twitter)">
+              <a href="https://x.com/Skoreova" class="gradient-icon p-2" aria-label="X">
                 <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                 </svg>
               </a>
-              <a href="https://threads.net" class="text-white/90 hover:text-blue-400 p-2 transition-colors duration-200" aria-label="Threads">
-                <img src="/ThreadsLogo.svg" alt="Threads" class="h-6 w-6 filter brightness-0 invert" />
+              <a href="https://threads.com/@skoreova" class="gradient-icon p-2" aria-label="Threads">
+                <IconThreads class="h-6 w-6" />
               </a>
             </div>
           </nav>
@@ -231,5 +229,89 @@ if (typeof window !== "undefined") {
 <style>
     .fontik {
         font-family: 'SpaceMonoBold';
+    }
+
+    .animated-gradient {
+        background: linear-gradient(-45deg, #f9a8d4, #f472b6, #ec4899, #db2777);
+        background-size: 400% 400%;
+        animation: gradient 3s ease infinite;
+    }
+
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .gradient-text {
+        background: linear-gradient(to right, #f9a8d4, #f472b6, #ec4899);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: white;
+        transition: -webkit-text-fill-color 0.5s ease-in-out;
+    }
+
+    .gradient-text:hover {
+        -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-icon {
+        color: rgba(255, 255, 255, 0.9);
+        transition: all 0.5s ease-in-out;
+    }
+
+    .gradient-icon:hover {
+        color: #f472b6;
+    }
+    .gradient-icon:hover svg {
+        color: #f472b6;
+        fill: #f472b6;
+    }
+    .gradient-icon:hover img {
+        filter: brightness(0) saturate(100%) invert(73%) sepia(87%) saturate(421%) hue-rotate(288deg) brightness(105%) contrast(89%);
+    }
+
+    .gradient-icon-button {
+        outline: none;
+    }
+
+    .hamburger-icon {
+        filter: brightness(0) invert(1);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .hamburger-icon-gradient {
+        filter: brightness(0) saturate(100%) invert(73%) sepia(87%) saturate(421%) hue-rotate(288deg) brightness(105%) contrast(89%);
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out, transform 0.3s ease-in-out;
+        pointer-events: none;
+    }
+
+    .gradient-icon-button:hover .hamburger-icon-gradient {
+        opacity: 1;
+    }
+
+    .brand-group {
+        transition: all 0.5s ease-in-out;
+    }
+
+    .brand-group:hover .logo-circle {
+        background: linear-gradient(to right, #f9a8d4, #f472b6, #ec4899) !important;
+        transition: background 0.5s ease-in-out;
+    }
+
+    .brand-group:hover .gradient-text {
+        -webkit-text-fill-color: transparent;
+        transition: -webkit-text-fill-color 0.5s ease-in-out;
+    }
+
+    .logo-circle {
+        transition: background 0.5s ease-in-out;
     }
 </style>

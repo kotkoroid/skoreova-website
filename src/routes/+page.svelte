@@ -54,11 +54,11 @@ const players: Player[] = [
 		assists: 15,
 	},
 	{
-		image: "/Kamila-Dubcova.png",
-		name: "Kamila Dubcová",
-		club: "SK Slavia Praha",
+		image: "/Antonie-Starova.png",
+		name: "Antonie Stárová",
+		club: "AC Sparta Praha",
 		position: "LW",
-		nationality: "Švédsko",
+		nationality: "Česko",
 		goals: 12,
 		assists: 11,
 	},
@@ -323,9 +323,11 @@ onDestroy(() => {
 /* Remaining CSS classes that are still needed for complex responsive grid layouts */
 </style>
 
+
+
 <!-- NEW GRID-BASED HERO SECTION -->
 <div
-	class="w-full pt-20 pb-8"
+	class="w-full pt-20 pb-8 relative"
 	onmousemove={handleMouseMove}
 	role="application"
 	style="background:
@@ -335,33 +337,32 @@ onDestroy(() => {
 		linear-gradient(135deg, #3a096e 0%, #1e0b40 50%, #000000 100%)"
 >
 
-	<!-- Background images as actual elements -->
-	<div class="absolute left-0 top-32 w-56 h-56 z-10 pointer-events-none opacity-50 lg:w-[600px] lg:h-[600px] lg:left-0 lg:top-[40%] lg:opacity-100 lg:-translate-x-1/3">
+	<!-- Background images positioned at the sides -->
+	<div class="absolute -left-62 w-[500px] h-[500px] z-10 pointer-events-none lg:w-[1200px] lg:h-[1200px] lg:-left-96 lg:top-[40%]" style="bottom: 200px;">
 		<img src="/RuzickovaBg.png" alt="" class="w-full h-full object-contain" />
 	</div>
-	<div class="absolute right-0 top-32 w-56 h-56 z-10 pointer-events-none opacity-50 lg:w-[600px] lg:h-[600px] lg:right-0 lg:top-[40%] lg:opacity-100 lg:translate-x-1/4">
+	<div class="absolute -right-52 w-[500px] h-[500px] z-10 pointer-events-none lg:w-[1200px] lg:h-[1200px] lg:-right-96 lg:top-[40%]" style="bottom: 200px;">
 		<img src="/KoptovaBg.png" alt="" class="w-full h-full object-contain" />
 	</div>
 
 	<!-- Grid container for content -->
 	<div class="hero-grid-container relative text-white grid m-0 p-0 z-20 gap-0 w-full
-		grid-cols-1 [grid-template-areas:'hero-text''cta-button''player-cards''logos'] [grid-template-rows:auto_auto_auto_auto]">
+		grid-cols-1 [grid-template-areas:'hero-text''cta-button''player-cards''new-section''logos'] [grid-template-rows:auto_auto_auto_auto_auto]">
 		<!-- Hero text section -->
 		<div class="[grid-area:hero-text]">
-			<div class="flex flex-col items-center justify-center relative -space-y-8 border-2 border-dashed border-white/30">
+			<div class="flex flex-col items-center justify-center relative -space-y-11">
 				<HeroTitle text="OBJEVTE" />
 				<div class="animate-breathe relative z-26">
 					<HeroTitleAccent text="ŽENSKÝ" />
 				</div>
-				<div class="-mt-2">
+				<div class="-mt-1">
 					<HeroTitle text="FOTBAL" />
 				</div>
 			</div>
 		</div>
 		<!-- CTA button section -->
 		<div class="[grid-area:cta-button]">
-			<div class="h-30 flex items-center justify-center border-2 border-dashed border-white/30 relative">
-				<div class="absolute top-2.5 left-2.5 text-xs opacity-70 z-30">CTA BUTTON AREA</div>
+			<div class="h-30 flex items-center justify-center relative">
 				<a
 					href="/hub"
 					class="inline-block py-4 px-12 bg-gradient-to-r from-pink-300 via-pink-400 to-pink-500 text-white no-underline font-bold text-[clamp(1.2rem,2vw,1.5rem)] rounded-full tracking-widest shadow-[1px_1px_2px_rgba(0,0,0,0.3)] drop-shadow-[0_20px_25px_rgba(0,0,0,0.1)] transition-all duration-300 hover:scale-105 hover:drop-shadow-[0_25px_50px_rgba(0,0,0,0.25)]"
@@ -371,8 +372,7 @@ onDestroy(() => {
 			</div>
 		</div>
 		<div class="[grid-area:player-cards]">
-			<div class="h-[300px] flex items-center justify-center border-2 border-dashed border-white/30 relative">
-				<div class="absolute top-2.5 left-2.5 text-xs opacity-70 z-30">PLAYER CARDS AREA</div>
+			<div class="h-[300px] flex items-center justify-center relative">
 				<div class="w-full h-[280px] flex items-center justify-center relative">
 					{#each visiblePlayers as { player, index, position } (position)}
 						<PlayerCard
@@ -384,6 +384,17 @@ onDestroy(() => {
 				</div>
 			</div>
 		</div>
+
+		<!-- New section -->
+		<div class="[grid-area:new-section]">
+			<div class="h-40 flex items-center justify-center relative">
+				<div class="text-center">
+					<h3 class="text-2xl font-bold mb-4">New Section</h3>
+					<p class="text-lg opacity-80">Add your content here</p>
+				</div>
+			</div>
+		</div>
+
 		<!-- <div class="[grid-area:logos] bg-white z-30">
 			<div class="relative">
 				<div class="absolute top-2.5 left-2.5 text-xs opacity-70 z-30 text-gray-600 border-2 border-dashed border-black/30 px-2 py-1 bg-white/80">LOGOS AREA</div>
