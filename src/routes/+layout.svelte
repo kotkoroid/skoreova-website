@@ -5,6 +5,9 @@ import { page } from "$app/state";
 import { isMobileMenuOpen } from "$lib/stores.js";
 import IconX from "$lib/components/IconX.svelte";
 import IconThreads from "$lib/components/IconThreads.svelte";
+import IconInstagram from "$lib/components/IconInstagram.svelte";
+import IconTikTok from "$lib/components/IconTikTok.svelte";
+import IconFacebook from "$lib/components/IconFacebook.svelte";
 
 const { children } = $props();
 let mouseX = $state(0);
@@ -64,8 +67,17 @@ if (typeof window !== "undefined") {
             <a href="https://x.com/Skoreova" class="gradient-icon p-2" aria-label="X">
               <IconX class="h-5 w-5" />
             </a>
+            <a href="https://tiktok.com/@skoreova" class="gradient-icon p-2" aria-label="TikTok">
+              <IconTikTok class="h-5 w-5" />
+            </a>
+            <a href="https://instagram.com/skoreova" class="gradient-icon p-2" aria-label="Instagram">
+              <IconInstagram class="h-5 w-5" />
+            </a>
             <a href="https://threads.com/@skoreova" class="gradient-icon p-2" aria-label="Threads">
               <IconThreads class="h-5 w-5" />
+            </a>
+            <a href="https://facebook.com/skoreova" class="gradient-icon p-2" aria-label="Facebook">
+              <IconFacebook class="h-5 w-5" />
             </a>
           </div>
 
@@ -90,8 +102,17 @@ if (typeof window !== "undefined") {
               <a href="https://x.com/Skoreova" class="gradient-icon p-2" aria-label="X">
                 <IconX class="h-6 w-6" />
               </a>
+              <a href="https://tiktok.com/@skoreova" class="gradient-icon p-2" aria-label="TikTok">
+                <IconTikTok class="h-6 w-6" />
+              </a>
+              <a href="https://instagram.com/skoreova" class="gradient-icon p-2" aria-label="Instagram">
+                <IconInstagram class="h-6 w-6" />
+              </a>
               <a href="https://threads.com/@skoreova" class="gradient-icon p-2" aria-label="Threads">
                 <IconThreads class="h-6 w-6" />
+              </a>
+              <a href="https://facebook.com/skoreova" class="gradient-icon p-2" aria-label="Facebook">
+                <IconFacebook class="h-6 w-6" />
               </a>
             </div>
           </nav>
@@ -151,8 +172,17 @@ if (typeof window !== "undefined") {
               <a href="https://x.com/Skoreova" class="gradient-icon p-3 lg:p-4 xl:p-5" aria-label="X">
                 <IconX class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8" />
               </a>
+              <a href="https://tiktok.com/@skoreova" class="gradient-icon p-3 lg:p-4 xl:p-5" aria-label="TikTok">
+                <IconTikTok class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8" />
+              </a>
+              <a href="https://instagram.com/skoreova" class="gradient-icon p-3 lg:p-4 xl:p-5" aria-label="Instagram">
+                <IconInstagram class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8" />
+              </a>
               <a href="https://threads.com/@skoreova" class="gradient-icon p-3 lg:p-4 xl:p-5" aria-label="Threads">
                 <IconThreads class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8" />
+              </a>
+              <a href="https://facebook.com/skoreova" class="gradient-icon p-3 lg:p-4 xl:p-5" aria-label="Facebook">
+                <IconFacebook class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8" />
               </a>
             </div>
 
@@ -182,12 +212,19 @@ if (typeof window !== "undefined") {
             <!-- Social Links -->
             <div class="flex items-center justify-center space-x-6 py-2">
               <a href="https://x.com/Skoreova" class="gradient-icon p-2" aria-label="X">
-                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
+                <IconX class="h-6 w-6" />
+              </a>
+              <a href="https://tiktok.com/@skoreova" class="gradient-icon p-2" aria-label="TikTok">
+                <IconTikTok class="h-6 w-6" />
+              </a>
+              <a href="https://instagram.com/skoreova" class="gradient-icon p-2" aria-label="Instagram">
+                <IconInstagram class="h-6 w-6" />
               </a>
               <a href="https://threads.com/@skoreova" class="gradient-icon p-2" aria-label="Threads">
                 <IconThreads class="h-6 w-6" />
+              </a>
+              <a href="https://facebook.com/skoreova" class="gradient-icon p-2" aria-label="Facebook">
+                <IconFacebook class="h-6 w-6" />
               </a>
             </div>
           </nav>
@@ -299,12 +336,19 @@ if (typeof window !== "undefined") {
 
     .brand-group {
         transition: all 0.5s ease-in-out;
+        animation: fadeInUp 1s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
     }
 
-    .brand-group:hover .logo-circle {
-        background: linear-gradient(to right, #f9a8d4, #f472b6, #ec4899) !important;
-        transition: background 0.5s ease-in-out;
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
+
+
 
     .brand-group:hover .gradient-text {
         -webkit-text-fill-color: transparent;
@@ -312,6 +356,11 @@ if (typeof window !== "undefined") {
     }
 
     .logo-circle {
-        transition: background 0.5s ease-in-out;
+        background-color: white;
+        transition: background-color 0.5s ease-in-out;
+    }
+
+    .brand-group:hover .logo-circle {
+        background-color: #f472b6;
     }
 </style>

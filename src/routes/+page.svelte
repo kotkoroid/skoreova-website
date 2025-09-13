@@ -1,11 +1,11 @@
 <script lang="ts">
 import { onDestroy, onMount } from "svelte";
-import { slide, fade } from "svelte/transition";
-import { quintOut, cubicOut } from "svelte/easing";
-import PlayerCard from "$lib/components/PlayerCard.svelte";
+import { cubicOut, quintOut } from "svelte/easing";
+import { fade, slide } from "svelte/transition";
 import HeroTitle from "$lib/components/HeroTitle.svelte";
 import HeroTitleAccent from "$lib/components/HeroTitleAccent.svelte";
-import type { Player, CardPosition } from "$lib/types.js";
+import PlayerCard from "$lib/components/PlayerCard.svelte";
+import type { CardPosition, Player } from "$lib/types.js";
 
 // Mouse tracking for cursor-following background
 let mouseX = $state(0);
@@ -31,7 +31,7 @@ if (typeof window !== "undefined") {
 }
 
 let currentPlayer = $state(0);
-let isTransitioning = $state(false);
+const isTransitioning = $state(false);
 let carouselInterval: ReturnType<typeof setInterval> | undefined;
 
 const players: Player[] = [
@@ -100,7 +100,7 @@ function goToPlayer(index: number) {
 	// Calculate shortest path direction
 	const totalPlayers = players.length;
 	const diff = index - currentPlayer;
-	const wrappedDiff = ((diff + totalPlayers) % totalPlayers);
+	const wrappedDiff = (diff + totalPlayers) % totalPlayers;
 
 	if (wrappedDiff <= totalPlayers / 2) {
 		direction = wrappedDiff > 0 ? 1 : 0;
@@ -164,24 +164,28 @@ function handleKeydown(event: KeyboardEvent) {
 }
 
 // Responsive screen size tracking
-let screenSize = $state('desktop'); // 'mobile', 'tablet', 'desktop'
+let screenSize = $state("desktop"); // 'mobile', 'tablet', 'desktop'
 
 function updateScreenSize() {
-	if (typeof window !== 'undefined') {
+	if (typeof window !== "undefined") {
 		const width = window.innerWidth;
 		if (width < 768) {
-			screenSize = 'mobile';
+			screenSize = "mobile";
 		} else if (width < 1024) {
-			screenSize = 'tablet';
+			screenSize = "tablet";
 		} else {
-			screenSize = 'desktop';
+			screenSize = "desktop";
 		}
 	}
 }
 
 // Get visible players - always show 5 cards on all screen sizes
 const visiblePlayers = $derived.by(() => {
-	const visible: Array<{player: Player, index: number, position: CardPosition}> = [];
+	const visible: Array<{
+		player: Player;
+		index: number;
+		position: CardPosition;
+	}> = [];
 	const totalPlayers = players.length;
 
 	// Always show 5 cards (far-left, left, center, right, far-right)
@@ -327,10 +331,10 @@ onDestroy(() => {
 
 <!-- NEW GRID-BASED HERO SECTION -->
 <div
-	class="w-full pt-20 pb-8 relative"
+	class="w-full pb-8 relative"
 	onmousemove={handleMouseMove}
 	role="application"
-	style="background:
+	style="padding-top: clamp(4rem, 5.5rem - max(0vw, 9vw - 3rem), 5.5rem); background:
 		radial-gradient(800px circle at {mouseX}px {mouseY}px, rgba(58, 9, 110, 0.4), transparent 70%),
 		radial-gradient(600px circle at {mouseX + 200}px {mouseY + 100}px, rgba(58, 9, 110, 0.3), transparent 70%),
 		radial-gradient(1000px circle at {mouseX - 150}px {mouseY - 100}px, rgba(58, 9, 110, 0.2), transparent 70%),
@@ -338,10 +342,10 @@ onDestroy(() => {
 >
 
 	<!-- Background images positioned at the sides -->
-	<div class="absolute -left-62 w-[500px] h-[500px] z-10 pointer-events-none lg:w-[1200px] lg:h-[1200px] lg:-left-96 lg:top-[40%]" style="bottom: 200px;">
+	<div class="absolute -left-62 w-[500px] h-[500px] z-10 pointer-events-none" style="bottom: 200px;">
 		<img src="/RuzickovaBg.png" alt="" class="w-full h-full object-contain" />
 	</div>
-	<div class="absolute -right-52 w-[500px] h-[500px] z-10 pointer-events-none lg:w-[1200px] lg:h-[1200px] lg:-right-96 lg:top-[40%]" style="bottom: 200px;">
+	<div class="absolute -right-52 w-[500px] h-[500px] z-10 pointer-events-none" style="bottom: 200px;">
 		<img src="/KoptovaBg.png" alt="" class="w-full h-full object-contain" />
 	</div>
 
@@ -350,22 +354,25 @@ onDestroy(() => {
 		grid-cols-1 [grid-template-areas:'hero-text''cta-button''player-cards''new-section''logos'] [grid-template-rows:auto_auto_auto_auto_auto]">
 		<!-- Hero text section -->
 		<div class="[grid-area:hero-text]">
-			<div class="flex flex-col items-center justify-center relative -space-y-11">
-				<HeroTitle text="OBJEVTE" />
-				<div class="animate-breathe relative z-26">
+			<div class="flex flex-col items-center justify-center relative h-[clamp(6rem,18vw,9rem)]">
+				<div class="absolute" style="top: 0;">
+					<HeroTitle text="OBJEVTE" />
+				</div>
+				<div class="absolute animate-breathe relative z-26" style="top: calc(0.7 * clamp(3rem, 9vw, 4.5rem));">
 					<HeroTitleAccent text="ŽENSKÝ" />
 				</div>
-				<div class="-mt-1">
+				<div class="absolute" style="top: calc(1.8 * clamp(3rem, 9vw, 4.5rem));">
 					<HeroTitle text="FOTBAL" />
 				</div>
 			</div>
 		</div>
 		<!-- CTA button section -->
 		<div class="[grid-area:cta-button]">
-			<div class="h-30 flex items-center justify-center relative">
+			<div class="flex items-center justify-center relative" style="height: clamp(7rem, 8rem + 8vw, 12rem); padding-top: clamp(2rem, 2rem + 6vw, 5rem);">
 				<a
 					href="/hub"
-					class="inline-block py-4 px-12 bg-gradient-to-r from-pink-300 via-pink-400 to-pink-500 text-white no-underline font-bold text-[clamp(1.2rem,2vw,1.5rem)] rounded-full tracking-widest shadow-[1px_1px_2px_rgba(0,0,0,0.3)] drop-shadow-[0_20px_25px_rgba(0,0,0,0.1)] transition-all duration-300 hover:scale-105 hover:drop-shadow-[0_25px_50px_rgba(0,0,0,0.25)]"
+					class="inline-block bg-gradient-to-r from-pink-300 via-pink-400 to-pink-500 text-white no-underline font-bold rounded-full tracking-widest shadow-[1px_1px_2px_rgba(0,0,0,0.3)] drop-shadow-[0_20px_25px_rgba(0,0,0,0.1)] transition-all duration-300 hover:scale-105 hover:drop-shadow-[0_25px_50px_rgba(0,0,0,0.25)]"
+					style="padding: clamp(0.5rem, 0.75rem + 0.5vw, 1rem) clamp(1.5rem, 2rem + 2vw, 3rem); font-size: clamp(0.9rem, 1rem + 0.5vw, 1.2rem);"
 				>
 					SPUSTIT
 				</a>
