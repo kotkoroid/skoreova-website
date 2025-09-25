@@ -223,8 +223,6 @@ onMount(async () => {
 });
 </script>
 
-
-
 <!-- Hero Section -->
 <section class="relative h-screen box-border flex items-start justify-center overflow-hidden pt-17 md:pt-24">
 	<!-- Hero Content -->
