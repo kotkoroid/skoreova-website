@@ -287,7 +287,8 @@ onMount(() => {
 		<!-- Header pink background - optimized with dynamic height -->
 		{#if mobileMenuOpen}
 			<!-- Dynamic height background that adapts to content -->
-			<div class="full-pink-bg bg-gradient-to-b from-purple-600 via-pink-500 to-pink-400 absolute top-0 left-0 right-0 origin-top border-b border-white/10" style="height: 100vh; max-height: 680px; transform: scaleY(0); will-change: transform;"></div>
+			<!-- <div class="full-pink-bg bg-gradient-to-b from-purple-600 via-pink-500 to-pink-400 absolute top-0 left-0 right-0 origin-top border-b border-white/10" style="height: 100vh; max-height: 680px; transform: scaleY(0); will-change: transform;"></div> -->
+			<div class="full-pink-bg bg-gradient-to-b from-purple-600 via-pink-500 to-pink-400 absolute top-0 left-0 right-0 origin-top border-b border-white/10" style="height: 100vh; max-height: 160px; transform: scaleY(0); will-change: transform;"></div>
 		{/if}
 
 	<!-- Header Content -->
@@ -298,23 +299,29 @@ onMount(() => {
 				<div class="h-16 w-16 bg-white rounded-full shadow-lg flex items-center justify-center">
 					<Logo size={72} color="#000000" />
 				</div>
-				<span class="text-white font-bold text-3xl uppercase">Skóreová</span>
+				<span class="text-white font-bold text-3xl uppercase tracking-wide">Skóreová</span>
 			</div>
 
 			<!-- Desktop Navigation Links -->
-			<div class="hidden md:flex items-center space-x-8">
+			<!-- <div class="hidden md:flex items-center space-x-8">
 				<a href="#home" class="text-white/80 hover:text-white transition-colors">Domů</a>
 				<a href="#features" class="text-white/80 hover:text-white transition-colors">Funkce</a>
 				<a href="#analytics" class="text-white/80 hover:text-white transition-colors">Analytika</a>
 				<a href="#teams" class="text-white/80 hover:text-white transition-colors">Týmy</a>
 				<a href="#contact" class="text-white/80 hover:text-white transition-colors">Kontakt</a>
-			</div>
+			</div> -->
 
-			<!-- Desktop CTA Button -->
-			<div class="hidden md:block">
-				<button class="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 px-8 py-3 rounded-lg text-white font-semibold text-lg transition-all duration-300 transform hover:scale-105">
-					Začít Zdarma
-				</button>
+			<!-- Desktop Social Icons -->
+			<div class="hidden md:flex items-center space-x-2">
+				{#each socialLinks as social}
+					<a
+						href={social.href}
+						target="_blank"
+						class="p-3 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-500 hover:border-transparent hover:shadow-lg hover:shadow-pink-500/25 hover:scale-110 transition-all duration-300 transform"
+					>
+						<social.icon size={18} color="white" class="hover:text-white transition-colors drop-shadow-sm" />
+					</a>
+				{/each}
 			</div>
 
 			<!-- Mobile Menu Button -->
@@ -338,7 +345,7 @@ onMount(() => {
 	{#if mobileMenuOpen}
 		<div class="md:hidden relative z-10 pb-4" style="will-change: transform, opacity;">
 			<!-- Mobile Navigation -->
-			<nav class="px-6 pt-2 space-y-0">
+			<!-- <nav class="px-6 pt-2 space-y-0">
 				{#each menuItems as item}
 					<a
 						href={item.href}
@@ -348,13 +355,13 @@ onMount(() => {
 						{item.label}
 					</a>
 				{/each}
-			</nav>
+			</nav> -->
 
 			<!-- Social Media Icons -->
 			<div class="px-6 py-4">
 				<div class="flex items-center justify-center space-x-6">
 					{#each socialLinks as social}
-						<a href={social.href} class="menu-item opacity-0 p-2 rounded-full hover:bg-white/20 transition-colors">
+						<a href={social.href} target="_blank" class="menu-item opacity-0 p-2 rounded-full hover:bg-white/20 transition-colors">
 							<social.icon size={24} color="white" class="hover:text-pink-200 transition-colors" />
 						</a>
 					{/each}
@@ -362,14 +369,14 @@ onMount(() => {
 			</div>
 
 			<!-- CTA Button -->
-			<div class="px-6 pt-6 pb-4">
+			<!-- <div class="px-6 pt-6 pb-4">
 				<button
 					class={`menu-button w-full bg-white text-pink-500 py-4 rounded-xl text-lg font-semibold hover:bg-pink-50 transition-colors opacity-0 ${mobileMenuOpen && !isAnimating ? 'buzzing-border' : ''}`}
 					onclick={closeMobileMenu}
 				>
 					SPUSTIT APLIKACI
 				</button>
-			</div>
+			</div> -->
 
 
 		</div>
@@ -388,6 +395,7 @@ onMount(() => {
 		scroll-behavior: auto;
 		margin: 0;
 		padding: 0;
+		overflow-x: hidden;
 	}
 
 	:global(body) {
@@ -395,6 +403,7 @@ onMount(() => {
 		padding: 0;
 		background: #0f172a;
 		min-height: 100vh;
+		overflow-x: hidden;
 	}
 
 	:global(.animate-bounce-stretch) {

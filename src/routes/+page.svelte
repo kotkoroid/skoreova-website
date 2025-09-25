@@ -3,6 +3,7 @@ import { onMount } from "svelte";
 import { animations, initGSAP } from "$lib/animations";
 import LazyImage from "$lib/components/LazyImage.svelte";
 import PlayerCard from "$lib/components/PlayerCard.svelte";
+import LockIcon from "$lib/components/LockIcon.svelte";
 
 // Player data
 const players = [
@@ -225,67 +226,61 @@ onMount(async () => {
 
 
 <!-- Hero Section -->
-<section class="relative min-h-screen flex items-start justify-center overflow-hidden pt-17 md:pt-24">
+<section class="relative h-screen box-border flex items-start justify-center overflow-hidden pt-17 md:pt-24">
 	<!-- Hero Content -->
 	<div class="relative z-40 text-center text-white px-4 max-w-6xl mx-auto">
-		<h1 class="hero-title text-[4rem] md:text-6xl lg:text-7xl font-medium mb-6 opacity-100 leading-loose tracking-wider relative test-azeret">
-			<div class="text-white my-class" style="font-family: 'JetBrains Mono', monospace; font-weight: 600; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; font-feature-settings: 'kern' 1, 'liga' 1;">OBJEVTE</div>
-			<div class="text-white my-class" style="font-family: 'JetBrains Mono', monospace; font-weight: 600; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; font-feature-settings: 'kern' 1, 'liga' 1;">FOTBAL</div>
-			<div class="absolute inset-0 flex items-center justify-center z-10 text-[5.3rem] md:text-9xl lg:text-[10rem]" style="transform: translateY(8px) rotate(-4deg);">
-				<div class="absolute text-black" style="font-family: 'Mogra', sans-serif; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; font-feature-settings: 'kern' 1, 'liga' 1; transform: translate(1px, 1px);">&nbsp;ŽENSKÝ&nbsp;</div>
-				<div class="relative bg-gradient-to-r from-pink-500 via-pink-400 via-rose-400 via-pink-300 to-pink-500 bg-clip-text text-transparent" style="font-family: 'Mogra', sans-serif; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; font-feature-settings: 'kern' 1, 'liga' 1; line-height: 1.5;">&nbsp;ŽENSKÝ&nbsp;</div>
+		<h1 class="font-test hero-title text-[5rem] md:text-8xl lg:text-9xl font-medium opacity-100 leading-loose tracking-wider relative">
+			<div class="text-white" style="text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; transform: rotateX(20deg);">OBJEVTE</div>
+			<div class="text-white" style="text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; transform: translateY(-0.5rem) rotateX(-20deg);">FOTBAL</div>
+			<div class="absolute inset-0 flex items-center justify-center z-10 text-[5.5rem] md:text-[6.5rem] lg:text-[8.5rem]">
+				<div class="relative bg-gradient-to-r from-pink-500 via-pink-400 via-rose-400 via-pink-300 to-pink-500 bg-clip-text text-transparent" style="text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; font-feature-settings: 'kern' 1, 'liga' 1; line-height: 1.5;">&nbsp;ŽENSKÝ&nbsp;</div>
 			</div>
 		</h1>
 
-		<div class="hero-cta opacity-100 flex justify-center mb-20">
-			<button class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 px-12 py-6 md:px-8 md:py-4 rounded-lg text-xl md:text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg">
+		<!-- <div class="hero-cta opacity-100 flex justify-center mb-20">
+			<button class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 px-12 py-6 md:px-16 md:py-8 rounded-lg md:rounded-2xl text-xl md:text-3xl font-semibold md:font-bold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-2xl hover:shadow-pink-500/25">
 				SPUSTIT
+			</button>
+		</div> -->
+
+		<div class="hero-cta opacity-100 flex justify-center mb-20">
+			<button class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 px-12 py-6 md:px-16 md:py-8 rounded-lg md:rounded-2xl text-xl md:text-3xl font-semibold md:font-bold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-2xl hover:shadow-gray-500/25 cursor-not-allowed" disabled>
+				<div class="flex items-center gap-3 md:gap-4">
+					<LockIcon size={24} color="white" class="md:w-8 md:h-8" />
+					<span>JIŽ BRZY</span>
+				</div>
 			</button>
 		</div>
 
 		<!-- Player Cards Carousel -->
-		<div class="player-carousel opacity-100 mb-12 relative z-20">
-			<div class="overflow-hidden" on:mouseenter={pauseCarousel} on:mouseleave={resumeCarousel}>
+		<!-- <div class="player-carousel opacity-100 mb-12 relative z-20">
+			<div role="presentation" class="overflow-hidden" on:mouseenter={pauseCarousel} on:mouseleave={resumeCarousel}>
 				<div class="carousel-track flex gap-6 pb-4">
 					{#each duplicatedPlayers as player, index}
 						<PlayerCard {player} />
 					{/each}
 				</div>
 			</div>
-		</div>
+		</div> -->
 
 	</div>
 
 	<!-- Player Images at Bottom -->
 	<div class="absolute bottom-0 left-0 right-0 pointer-events-none z-30">
-		<!-- Mobile and Medium: positioned on sides with pixel-perfect control -->
+		<!-- Left Player - Consistent positioning across all breakpoints -->
 		<LazyImage
 			src="/RuzickovaBg.png"
 			alt="Ruzickova"
-			class="absolute bottom-0 left-0 h-[37rem] sm:h-[37rem] md:h-[38rem] object-cover object-bottom opacity-80 transform -translate-x-46 sm:-translate-x-47 md:-translate-x-20 lg:hidden"
-			threshold={0.1}
-		/>
-		<LazyImage
-			src="/KoptovaBg.png"
-			alt="Koptova"
-			class="absolute bottom-0 right-0 h-[36rem] sm:h-[36rem] md:h-[38rem] object-cover object-bottom opacity-80 transform translate-x-36 sm:translate-x-36 md:translate-x-20 lg:hidden"
+			class="absolute bottom-0 lg:-bottom-20 left-0 h-[36rem] md:h-[44rem] lg:h-[46rem] xl:h-[48rem] w-auto object-cover opacity-80 transform -translate-x-50 md:-translate-x-45 lg:-translate-x-40"
 			threshold={0.1}
 		/>
 
-		<!-- Large Desktop: flex layout -->
-		<div class="hidden lg:flex justify-between items-end">
-			<LazyImage
-				src="/RuzickovaBg.png"
-				alt="Ruzickova"
-				class="h-[46rem] xl:h-[54rem] object-contain object-bottom opacity-80"
-				threshold={0.1}
-			/>
-			<LazyImage
-				src="/KoptovaBg.png"
-				alt="Koptova"
-				class="h-[46rem] xl:h-[54rem] object-contain object-bottom opacity-80"
-				threshold={0.1}
-			/>
-		</div>
+		<!-- Right Player - Consistent positioning across all breakpoints -->
+		<LazyImage
+			src="/BgBartonova.png"
+			alt="Bartonova"
+			class="absolute bottom-0 lg:-bottom-24 right-0 h-[36rem] md:h-[44rem] lg:h-[46rem] xl:h-[48rem] w-auto object-cover opacity-80 transform translate-x-12 md:translate-x-0 lg:-translate-x-10"
+			threshold={0.1}
+		/>
 	</div>
 </section>

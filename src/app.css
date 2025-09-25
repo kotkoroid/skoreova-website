@@ -1,5 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Baloo+Paaji+2:wght@400..800&display=swap");
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Mogra:wght@400&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Audiowide:wght@400&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:ital,wght@0,300..700;1,300..700&display=swap");
+
+.font-test {
+	font-family: "Baloo Paaji 2", sans-serif;
+	letter-spacing: 4px;
+	font-weight: 700;
+}
