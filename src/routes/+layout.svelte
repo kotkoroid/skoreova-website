@@ -1,354 +1,444 @@
 <script lang="ts">
 import "../app.css";
+import { onMount } from "svelte";
 import { browser } from "$app/environment";
-import { page } from "$app/state";
-import { isMobileMenuOpen } from "$lib/stores.js";
-import IconX from "$lib/components/IconX.svelte";
-import IconThreads from "$lib/components/IconThreads.svelte";
-import IconInstagram from "$lib/components/IconInstagram.svelte";
-import IconTikTok from "$lib/components/IconTikTok.svelte";
-import IconFacebook from "$lib/components/IconFacebook.svelte";
+import AnimationIcon from "$lib/components/AnimationIcon.svelte";
+import CloseIcon from "$lib/components/CloseIcon.svelte";
+import FacebookIcon from "$lib/components/FacebookIcon.svelte";
+import GitHubIcon from "$lib/components/GitHubIcon.svelte";
+import HamburgerMenuIcon from "$lib/components/HamburgerMenuIcon.svelte";
+import InstagramIcon from "$lib/components/InstagramIcon.svelte";
+import InteractiveBackground from "$lib/components/InteractiveBackground.svelte";
+import Logo from "$lib/components/Logo.svelte";
+import ThreadsIcon from "$lib/components/ThreadsIcon.svelte";
+import TikTokIcon from "$lib/components/TikTokIcon.svelte";
+import XIcon from "$lib/components/XIcon.svelte";
 
 const { children } = $props();
-let mouseX = $state(0);
-let mouseY = $state(0);
-let targetX = $state(0);
-let targetY = $state(0);
 
-$effect(() => {
+let lenis: any = null;
+let gsap: any = null;
+
+// Unified animation state management
+type MenuState = "closed" | "opening" | "open" | "closing";
+let menuState = $state<MenuState>("closed");
+let currentAnimation: gsap.core.Timeline | null = null;
+
+// Cache DOM elements for animations
+let menuElements: {
+	background?: HTMLElement;
+	items?: HTMLElement[];
+	buttons?: HTMLElement[];
+} = {};
+
+// Derived states for components
+const mobileMenuOpen = $derived(
+	menuState === "open" || menuState === "opening" || menuState === "closing",
+);
+const isAnimating = $derived(
+	menuState === "opening" || menuState === "closing",
+);
+
+// Menu data for reduced duplication
+const menuItems = [
+	{ href: "#home", label: "Domů" },
+	{ href: "#features", label: "Funkce" },
+	{ href: "#analytics", label: "Analytika" },
+	{ href: "#teams", label: "Týmy" },
+	{ href: "#contact", label: "Kontakt" },
+];
+
+const socialLinks = [
+	{ href: "https://facebook.com/skoreova", icon: FacebookIcon },
+	{ href: "https://instagram.com/skoreova", icon: InstagramIcon },
+	{ href: "https://tiktok.com/@skoreova", icon: TikTokIcon },
+	{ href: "https://x.com/Skoreova", icon: XIcon },
+	{ href: "https://threads.com/@skoreova", icon: ThreadsIcon },
+	{ href: "https://github.com/falkara", icon: GitHubIcon },
+];
+
+function resetAnimationState() {
+	if (currentAnimation) {
+		currentAnimation.kill();
+		currentAnimation = null;
+	}
+	menuState = "closed";
+}
+
+async function toggleMobileMenu() {
+	// Prevent multiple clicks during animation
+	if (isAnimating) return;
+
+	if (mobileMenuOpen) {
+		await closeMobileMenu();
+	} else {
+		await openMobileMenu();
+	}
+}
+
+async function openMobileMenu() {
+	// Cancel any existing animation
+	if (currentAnimation) {
+		currentAnimation.kill();
+	}
+
+	menuState = "opening";
+
+	if (!gsap) {
+		console.warn("GSAP not loaded, using fallback");
+		menuState = "open";
+		return;
+	}
+
+	// Wait for DOM to render before starting animations
+	requestAnimationFrame(() => {
+		// Cache DOM elements once
+		menuElements.background = document.querySelector(
+			".full-pink-bg",
+		) as HTMLElement;
+		menuElements.items = Array.from(
+			document.querySelectorAll(".menu-item"),
+		) as HTMLElement[];
+		menuElements.buttons = Array.from(
+			document.querySelectorAll(".menu-button"),
+		) as HTMLElement[];
+
+		// Create master timeline for coordinated animation
+		currentAnimation = gsap.timeline({
+			onComplete: () => {
+				menuState = "open";
+				currentAnimation = null;
+			},
+			onInterrupt: () => {
+				currentAnimation = null;
+			},
+		});
+
+		// Background roll animation
+		if (menuElements.background) {
+			currentAnimation.fromTo(
+				menuElements.background,
+				{
+					scaleY: 0,
+					transformOrigin: "top",
+				},
+				{
+					scaleY: 1,
+					duration: 0.6,
+					ease: "power2.out",
+				},
+			);
+		}
+
+		// Menu items animation (starts while background is still animating)
+		if (menuElements.items && menuElements.items.length > 0) {
+			currentAnimation.fromTo(
+				menuElements.items,
+				{
+					y: -15,
+					opacity: 0,
+				},
+				{
+					y: 0,
+					opacity: 1,
+					duration: 0.4,
+					stagger: 0.06,
+					ease: "power1.out",
+				},
+				0.25, // Start earlier for faster perceived loading
+			);
+		}
+
+		// Buttons animation
+		if (menuElements.buttons && menuElements.buttons.length > 0) {
+			currentAnimation.fromTo(
+				menuElements.buttons,
+				{
+					y: 10,
+					opacity: 0,
+				},
+				{
+					y: 0,
+					opacity: 1,
+					duration: 0.35,
+					stagger: 0.08,
+					ease: "power1.out",
+				},
+				0.45, // Start sooner and overlap with menu items
+			);
+		}
+	});
+}
+
+async function closeMobileMenu() {
+	// Cancel any existing animation
+	if (currentAnimation) {
+		currentAnimation.kill();
+	}
+
+	menuState = "closing";
+
+	if (!gsap) {
+		console.warn("GSAP not loaded, using fallback animation");
+		menuState = "closed";
+		return;
+	}
+
+	// Use cached elements if available, otherwise fallback to queries
+	const itemsAndButtons = [
+		...(menuElements.items || []),
+		...(menuElements.buttons || []),
+	];
+
+	// Skip animation if no cached elements (shouldn't happen in normal flow)
+	if (itemsAndButtons.length === 0) {
+		console.warn("No cached menu elements found, skipping content animation");
+	}
+
+	// Create close animation timeline
+	currentAnimation = gsap.timeline({
+		onComplete: () => {
+			menuState = "closed";
+			currentAnimation = null;
+		},
+		onInterrupt: () => {
+			currentAnimation = null;
+		},
+	});
+
+	// Animate content and background with optimized overlap timing
+	if (itemsAndButtons.length > 0) {
+		currentAnimation.to(itemsAndButtons, {
+			y: -10,
+			opacity: 0,
+			duration: 0.15,
+			ease: "power1.in",
+		});
+	}
+
+	// Start background animation slightly before content finishes for smoother transition
+	if (menuElements.background) {
+		currentAnimation.to(
+			menuElements.background,
+			{
+				scaleY: 0,
+				duration: 0.4,
+				ease: "power2.inOut",
+			},
+			0.1, // Start 0.1s after timeline begins (overlaps with content animation)
+		);
+	}
+}
+
+onMount(() => {
 	if (browser) {
-		document.documentElement.classList.add("dark");
+		// Load GSAP once and cache it
+		setTimeout(async () => {
+			try {
+				const gsapModule = await import("gsap");
+				gsap = gsapModule.gsap;
+			} catch (error) {
+				console.warn("Failed to load GSAP:", error);
+			}
+		}, 50);
+
+		// Defer non-critical smooth scrolling until after initial render
+		setTimeout(async () => {
+			try {
+				const { default: Lenis } = await import("lenis");
+				await import("lenis/dist/lenis.css");
+
+				lenis = new Lenis({
+					duration: 1.2,
+					easing: (t: number) => Math.min(1, 1.001 - 2 ** (-10 * t)),
+				});
+
+				function raf(time: number) {
+					lenis.raf(time);
+					requestAnimationFrame(raf);
+				}
+
+				requestAnimationFrame(raf);
+			} catch (error) {
+				console.warn("Failed to load Lenis smooth scrolling:", error);
+			}
+		}, 100);
+
+		return () => {
+			lenis?.destroy();
+		};
 	}
 });
-
-const isHomepage = $derived(page.url.pathname === "/");
-
-function toggleMobileMenu() {
-	isMobileMenuOpen.update((open) => !open);
-}
-
-function handleMouseMove(event: MouseEvent) {
-	targetX = event.clientX;
-	targetY = event.clientY + window.scrollY;
-}
-
-// Smooth animation loop
-function animate() {
-	mouseX += (targetX - mouseX) * 0.1;
-	mouseY += (targetY - mouseY) * 0.1;
-	requestAnimationFrame(animate);
-}
-
-// Start animation on mount
-if (typeof window !== "undefined") {
-	animate();
-}
 </script>
 
-{#if isHomepage}
-  <!-- Homepage Layout: Single Scroll Context with Fixed Header -->
-    <!-- Header - Fixed positioned to overlay content -->
-    <header class="fixed top-0 left-0 right-0 backdrop-blur-md shadow-sm z-50 transition-all duration-300 ease-in-out" style="background: transparent;">
-      <div class="max-w-7xl mx-auto px-4">
-        <div class="flex justify-between items-center h-20">
-          <div class="flex items-center space-x-3 brand-group">
-            <!-- Logo placeholder -->
-            <a href="/" class="flex items-center" style="cursor: pointer !important;">
-              <img src="/Logo.svg" alt="Skóreová logo" class="w-14 h-14 bg-white rounded-full p-0 logo-circle" style="cursor: pointer !important;" />
-            </a>
-            <!-- Header text as link -->
-            <a href="/" class="fontik text-3xl min-[480px]:text-3xl sm:text-3xl md:text-3xl lg:text-3xl xl:text-3xl tracking-wider font-semibold transition-all duration-500 uppercase gradient-text" style="cursor: pointer !important;">
-              Skóreová
-            </a>
-          </div>
+<!-- Interactive Background -->
+<InteractiveBackground />
 
-          <!-- Social Icons - Desktop Only (1024px+) -->
-          <div class="hidden lg:flex items-center space-x-4">
-            <a href="https://x.com/Skoreova" class="gradient-icon p-2" aria-label="X">
-              <IconX class="h-5 w-5" />
-            </a>
-            <a href="https://instagram.com/skoreova" class="gradient-icon p-2" aria-label="Instagram">
-              <IconInstagram class="h-5 w-5" />
-            </a>
-            <a href="https://tiktok.com/@skoreova" class="gradient-icon p-2" aria-label="TikTok">
-              <IconTikTok class="h-5 w-5" />
-            </a>
-            <a href="https://facebook.com/skoreova" class="gradient-icon p-2" aria-label="Facebook">
-              <IconFacebook class="h-5 w-5" />
-            </a>
-            <a href="https://threads.com/@skoreova" class="gradient-icon p-2" aria-label="Threads">
-              <IconThreads class="h-5 w-5" />
-            </a>
-          </div>
-
-          <!-- Mobile & Tablet menu button (up to 1024px) -->
-          <div class="lg:hidden ml-4">
-            <button
-              onclick={toggleMobileMenu}
-              class="gradient-icon-button p-2 relative"
-              aria-label="Toggle menu"
-            >
-              <img src={$isMobileMenuOpen ? "/Close.svg" : "/Menu.svg"} alt={$isMobileMenuOpen ? "Close menu" : "Open menu"} class="hamburger-icon w-12 h-12 transition-all duration-300 ease-in-out" style="transform: rotate({$isMobileMenuOpen ? '90deg' : '0deg'});" />
-              <img src={$isMobileMenuOpen ? "/Close.svg" : "/Menu.svg"} alt={$isMobileMenuOpen ? "Close menu" : "Open menu"} class="hamburger-icon-gradient w-12 h-12 absolute top-2 left-2 transition-all duration-300 ease-in-out" style="transform: rotate({$isMobileMenuOpen ? '90deg' : '0deg'});" />
-            </button>
-          </div>
-        </div>
-
-        <!-- Mobile & Tablet Navigation Menu - Extended within header -->
-        <div class="lg:hidden transition-all duration-300 ease-in-out backdrop-blur-md {$isMobileMenuOpen ? 'opacity-100 max-h-40' : 'opacity-0 max-h-0 overflow-hidden'}" style="background: transparent;">
-          <nav class="px-0 pt-2 pb-4 space-y-1">
-            <!-- Social Links -->
-            <div class="flex items-center justify-center space-x-6 py-2">
-              <a href="https://x.com/Skoreova" class="gradient-icon p-2" aria-label="X">
-                <IconX class="h-6 w-6" />
-              </a>
-              <a href="https://instagram.com/skoreova" class="gradient-icon p-2" aria-label="Instagram">
-                <IconInstagram class="h-6 w-6" />
-              </a>
-              <a href="https://tiktok.com/@skoreova" class="gradient-icon p-2" aria-label="TikTok">
-                <IconTikTok class="h-6 w-6" />
-              </a>
-              <a href="https://facebook.com/skoreova" class="gradient-icon p-2" aria-label="Facebook">
-                <IconFacebook class="h-6 w-6" />
-              </a>
-              <a href="https://threads.com/@skoreova" class="gradient-icon p-2" aria-label="Threads">
-                <IconThreads class="h-6 w-6" />
-              </a>
-            </div>
-          </nav>
-        </div>
-      </div>
-    </header>
-
-  <!-- Full Width Homepage Content -->
-  <main class="w-full">
-    {@render children()}
-  </main>
-
-  <!-- Footer -->
-  <footer class="bg-gray-800 py-6">
-    <div class="max-w-6xl mx-auto px-4 text-center text-gray-400 text-sm">
-      <p>&copy; 2025 Falkara</p>
-      <!-- <p>Privacy Policy | Terms of Use | Contact</p> -->
-    </div>
-  </footer>
-
-{:else}
-  <!-- Other Pages Layout: Animated Background + A4 Container + Sidebar -->
-  <div
-    class="min-h-screen relative transition-all duration-1000 ease-out"
-    onmousemove={handleMouseMove}
-    role="application"
-    style="background:
-      radial-gradient(800px circle at {mouseX}px {mouseY}px, rgba(59, 130, 246, 0.4), transparent 70%),
-      radial-gradient(600px circle at {mouseX + 200}px {mouseY + 100}px, rgba(147, 51, 234, 0.3), transparent 70%),
-      radial-gradient(1000px circle at {mouseX - 150}px {mouseY - 100}px, rgba(16, 185, 129, 0.2), transparent 70%),
-      linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #000000 100%)"
-  >
-    <div class="min-h-screen relative z-10">
-      <!-- Header -->
-      <header class="backdrop-blur-md shadow-sm sticky top-0 z-50" style="background-color: rgba(17, 24, 39, 0.8);">
-        <div class="max-w-7xl mx-auto px-6">
-          <div class="flex justify-between items-center h-20">
-            <div class="flex items-center space-x-3 brand-group">
-              <!-- Logo placeholder -->
-              <a href="/" class="flex items-center">
-                <img src="/Logo.svg" alt="Skóreová logo" class="w-12 h-12 min-[480px]:w-14 min-[480px]:h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 xl:w-24 xl:h-24 bg-white rounded-full p-0 logo-circle" />
-              </a>
-              <!-- Header text as link -->
-              <a href="/" class="text-lg min-[480px]:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold transition-all duration-500 uppercase hidden min-[320px]:block gradient-text">
-                Skóreová
-              </a>
-            </div>
-
-            <!-- Desktop Navigation (1024px+) -->
-            <nav class="hidden lg:flex space-x-6 xl:space-x-10">
-              <a href="/hub" class="text-white/90 hover:text-blue-400 px-4 lg:px-5 xl:px-6 py-3 lg:py-4 text-base lg:text-lg xl:text-xl font-medium uppercase">Hub</a>
-              <a href="/contact" class="text-white/90 hover:text-blue-400 px-4 lg:px-5 xl:px-6 py-3 lg:py-4 text-base lg:text-lg xl:text-xl font-medium uppercase">Kontakt</a>
-            </nav>
-
-            <!-- Social Icons - Desktop Only (1024px+) -->
-            <div class="hidden lg:flex items-center space-x-3 xl:space-x-5">
-              <a href="https://x.com/Skoreova" class="gradient-icon p-3 lg:p-4 xl:p-5" aria-label="X">
-                <IconX class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8" />
-              </a>
-              <a href="https://instagram.com/skoreova" class="gradient-icon p-3 lg:p-4 xl:p-5" aria-label="Instagram">
-                <IconInstagram class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8" />
-              </a>
-              <a href="https://tiktok.com/@skoreova" class="gradient-icon p-3 lg:p-4 xl:p-5" aria-label="TikTok">
-                <IconTikTok class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8" />
-              </a>
-              <a href="https://facebook.com/skoreova" class="gradient-icon p-3 lg:p-4 xl:p-5" aria-label="Facebook">
-                <IconFacebook class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8" />
-              </a>
-              <a href="https://threads.com/@skoreova" class="gradient-icon p-3 lg:p-4 xl:p-5" aria-label="Threads">
-                <IconThreads class="h-6 w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8" />
-              </a>
-            </div>
-
-            <!-- Mobile & Tablet menu button (up to 1024px) -->
-            <div class="lg:hidden ml-4">
-              <button
-                onclick={toggleMobileMenu}
-                class="gradient-icon-button p-2 relative"
-                aria-label="Toggle menu"
-              >
-                <img src={$isMobileMenuOpen ? "/Close.svg" : "/Menu.svg"} alt={$isMobileMenuOpen ? "Close menu" : "Open menu"} class="hamburger-icon w-12 h-12 min-[480px]:w-14 min-[480px]:h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 transition-all duration-300 ease-in-out" style="transform: rotate({$isMobileMenuOpen ? '90deg' : '0deg'});" />
-                <img src={$isMobileMenuOpen ? "/Close.svg" : "/Menu.svg"} alt={$isMobileMenuOpen ? "Close menu" : "Open menu"} class="hamburger-icon-gradient w-12 h-12 min-[480px]:w-14 min-[480px]:h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 absolute top-2 left-2 transition-all duration-300 ease-in-out" style="transform: rotate({$isMobileMenuOpen ? '90deg' : '0deg'});" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Mobile & Tablet Navigation Menu -->
-        <div class="lg:hidden absolute top-20 left-0 right-0 z-40 transition-all duration-300 ease-in-out backdrop-blur-md shadow-sm {$isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}" style="background-color: rgba(17, 24, 39, 0.8);">
-          <nav class="px-4 pt-2 pb-4 space-y-1">
-            <a href="/hub" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Hub</a>
-            <a href="/contact" class="block px-3 py-2 text-white/90 hover:text-blue-400 rounded-md text-sm font-medium transition-colors duration-200 uppercase">Kontakt</a>
-
-            <!-- Social Links Separator -->
-            <div class="border-t border-white/20 my-3"></div>
-
-            <!-- Social Links -->
-            <div class="flex items-center justify-center space-x-6 py-2">
-              <a href="https://x.com/Skoreova" class="gradient-icon p-2" aria-label="X">
-                <IconX class="h-6 w-6" />
-              </a>
-              <a href="https://instagram.com/skoreova" class="gradient-icon p-2" aria-label="Instagram">
-                <IconInstagram class="h-6 w-6" />
-              </a>
-              <a href="https://tiktok.com/@skoreova" class="gradient-icon p-2" aria-label="TikTok">
-                <IconTikTok class="h-6 w-6" />
-              </a>
-              <a href="https://facebook.com/skoreova" class="gradient-icon p-2" aria-label="Facebook">
-                <IconFacebook class="h-6 w-6" />
-              </a>
-              <a href="https://threads.com/@skoreova" class="gradient-icon p-2" aria-label="Threads">
-                <IconThreads class="h-6 w-6" />
-              </a>
-            </div>
-          </nav>
-        </div>
-      </header>
-
-      <!-- Main container -->
-      <div class="max-w-6xl mx-auto px-4 py-8">
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          <!-- Main content - A4 paper style -->
-          <main class="lg:col-span-3 order-1 lg:order-1">
-            <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg mx-auto" style="width: 210mm; min-height: 297mm; max-width: 100%;">
-              <div class="p-8 lg:p-12">
-                {@render children()}
-              </div>
-            </div>
-          </main>
-
-          <!-- Sidebar on the right -->
-          <aside class="lg:col-span-1 order-2 lg:order-2 sticky top-24 self-start">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-              <h3 class="font-semibold mb-4 text-gray-900 dark:text-white">Sidebar</h3>
-              <p class="text-gray-600 dark:text-gray-400 text-sm">Add your sidebar content here</p>
-            </div>
-          </aside>
-        </div>
-      </div>
-
-      <!-- Footer at bottom of screen -->
-      <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-6 mt-12">
-        <div class="max-w-6xl mx-auto px-4 text-center text-gray-600 dark:text-gray-400 text-sm">
-          <p>&copy; 2025 Skóreová. All rights reserved.</p>
-        </div>
-      </footer>
-    </div>
-  </div>
+<!-- Backdrop blur overlay - optimized for performance -->
+{#if mobileMenuOpen}
+	<div class="fixed inset-0 z-40 bg-black/20" style="backdrop-filter: blur(8px); will-change: opacity;"></div>
 {/if}
 
+<!-- Combined Header/Menu -->
+<div class="fixed top-0 left-0 right-0 z-50 md:backdrop-blur-md" style="contain: layout style;">
+	<!-- Header background - always visible -->
+	<div class={`${!mobileMenuOpen ? 'backdrop-blur-md border-b border-white/10' : ''}`} style={!mobileMenuOpen ? 'background-color: rgba(15, 23, 42, 0.2);' : ''}>
+
+		<!-- Header pink background - optimized with dynamic height -->
+		{#if mobileMenuOpen}
+			<!-- Dynamic height background that adapts to content -->
+			<!-- <div class="full-pink-bg bg-gradient-to-b from-purple-600 via-pink-500 to-pink-400 absolute top-0 left-0 right-0 origin-top border-b border-white/10" style="height: 100vh; max-height: 680px; transform: scaleY(0); will-change: transform;"></div> -->
+			<div class="full-pink-bg bg-gradient-to-b from-purple-600 via-pink-500 to-pink-400 absolute top-0 left-0 right-0 origin-top border-b border-white/10" style="height: 100vh; max-height: 160px; transform: scaleY(0); will-change: transform;"></div>
+		{/if}
+
+	<!-- Header Content -->
+	<nav class={`max-w-7xl mx-auto px-4 py-2.5 relative z-10 ${mobileMenuOpen ? 'border-b border-white/10' : ''}`}>
+		<div class="flex items-center justify-between min-h-[3.75rem]">
+			<!-- Logo -->
+			<div class="flex items-center space-x-4">
+				<div class="h-16 w-16 bg-white rounded-full shadow-lg flex items-center justify-center">
+					<Logo size={72} color="#000000" />
+				</div>
+				<span class="text-white font-bold text-3xl uppercase tracking-wide">Skóreová</span>
+			</div>
+
+			<!-- Desktop Navigation Links -->
+			<!-- <div class="hidden md:flex items-center space-x-8">
+				<a href="#home" class="text-white/80 hover:text-white transition-colors">Domů</a>
+				<a href="#features" class="text-white/80 hover:text-white transition-colors">Funkce</a>
+				<a href="#analytics" class="text-white/80 hover:text-white transition-colors">Analytika</a>
+				<a href="#teams" class="text-white/80 hover:text-white transition-colors">Týmy</a>
+				<a href="#contact" class="text-white/80 hover:text-white transition-colors">Kontakt</a>
+			</div> -->
+
+			<!-- Desktop Social Icons -->
+			<div class="hidden md:flex items-center space-x-2">
+				{#each socialLinks as social}
+					<a
+						href={social.href}
+						target="_blank"
+						class="p-3 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-gradient-to-r hover:from-pink-500 hover:to-purple-500 hover:border-transparent hover:shadow-lg hover:shadow-pink-500/25 hover:scale-110 transition-all duration-300 transform"
+					>
+						<social.icon size={18} color="white" class="hover:text-white transition-colors drop-shadow-sm" />
+					</a>
+				{/each}
+			</div>
+
+			<!-- Mobile Menu Button -->
+			<button
+				class={`md:hidden text-white p-2 rounded-lg transition-colors ${isAnimating ? '' : 'hover:bg-white/10'}`}
+				onclick={toggleMobileMenu}
+				disabled={isAnimating}
+			>
+				{#if isAnimating}
+					<AnimationIcon size={32} color="white" class="animate-bounce-stretch" />
+				{:else if mobileMenuOpen}
+					<CloseIcon size={32} color="white" />
+				{:else}
+					<HamburgerMenuIcon size={32} color="white" />
+				{/if}
+			</button>
+		</div>
+	</nav>
+
+	<!-- Mobile Menu Content (only visible when menu is open) -->
+	{#if mobileMenuOpen}
+		<div class="md:hidden relative z-10 pb-4" style="will-change: transform, opacity;">
+			<!-- Mobile Navigation -->
+			<!-- <nav class="px-6 pt-2 space-y-0">
+				{#each menuItems as item}
+					<a
+						href={item.href}
+						class="menu-item block py-6 text-2xl font-medium text-white hover:text-pink-200 transition-colors border-b border-white/20 opacity-0"
+						onclick={closeMobileMenu}
+					>
+						{item.label}
+					</a>
+				{/each}
+			</nav> -->
+
+			<!-- Social Media Icons -->
+			<div class="px-6 py-4">
+				<div class="flex items-center justify-center space-x-6">
+					{#each socialLinks as social}
+						<a href={social.href} target="_blank" class="menu-item opacity-0 p-2 rounded-full hover:bg-white/20 transition-colors">
+							<social.icon size={24} color="white" class="hover:text-pink-200 transition-colors" />
+						</a>
+					{/each}
+				</div>
+			</div>
+
+			<!-- CTA Button -->
+			<!-- <div class="px-6 pt-6 pb-4">
+				<button
+					class={`menu-button w-full bg-white text-pink-500 py-4 rounded-xl text-lg font-semibold hover:bg-pink-50 transition-colors opacity-0 ${mobileMenuOpen && !isAnimating ? 'buzzing-border' : ''}`}
+					onclick={closeMobileMenu}
+				>
+					SPUSTIT APLIKACI
+				</button>
+			</div> -->
+
+
+		</div>
+	{/if}
+	</div>
+</div>
+
+
+
+<main class="relative z-10">
+	{@render children()}
+</main>
+
 <style>
-    .fontik {
-        font-family: 'SpaceMonoBold';
-    }
+	:global(html) {
+		scroll-behavior: auto;
+		margin: 0;
+		padding: 0;
+		overflow-x: hidden;
+	}
 
-    .animated-gradient {
-        background: linear-gradient(-45deg, #f9a8d4, #f472b6, #ec4899, #db2777);
-        background-size: 400% 400%;
-        animation: gradient 3s ease infinite;
-    }
+	:global(body) {
+		margin: 0;
+		padding: 0;
+		background: #0f172a;
+		min-height: 100vh;
+		overflow-x: hidden;
+	}
 
-    @keyframes gradient {
-        0% {
-            background-position: 0% 50%;
-        }
-        50% {
-            background-position: 100% 50%;
-        }
-        100% {
-            background-position: 0% 50%;
-        }
-    }
+	:global(.animate-bounce-stretch) {
+		animation: bounce-stretch 0.8s ease-in-out infinite;
+	}
 
-    .gradient-text {
-        background: linear-gradient(to right, #f9a8d4, #f472b6, #ec4899);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: white;
-        transition: -webkit-text-fill-color 0.5s ease-in-out;
-    }
+	@keyframes bounce-stretch {
+		0%, 100% {
+			transform: scale(1);
+		}
+		25% {
+			transform: scale(1.1, 0.9);
+		}
+		50% {
+			transform: scale(1.2);
+		}
+		75% {
+			transform: scale(0.9, 1.1);
+		}
+	}
 
-    .gradient-text:hover {
-        -webkit-text-fill-color: transparent;
-    }
+	.buzzing-border {
+		border: 2px solid transparent;
+		background: linear-gradient(#ffffff, #ffffff) padding-box,
+		           linear-gradient(90deg, #ff1493, #ff6b6b, #ffffff, #ff8c42, #ff1493) border-box;
+		background-size: 100% 100%, 200% 100%;
+		animation: buzzing-colors 2s linear infinite;
+	}
 
-    .gradient-icon {
-        color: rgba(255, 255, 255, 0.9);
-        transition: all 0.5s ease-in-out;
-    }
-
-    .gradient-icon:hover {
-        color: #f472b6;
-    }
-    .gradient-icon:hover svg {
-        color: #f472b6;
-        fill: #f472b6;
-    }
-    .gradient-icon:hover img {
-        filter: brightness(0) saturate(100%) invert(73%) sepia(87%) saturate(421%) hue-rotate(288deg) brightness(105%) contrast(89%);
-    }
-
-    .gradient-icon-button {
-        outline: none;
-    }
-
-    .hamburger-icon {
-        filter: brightness(0) invert(1);
-        transition: all 0.3s ease-in-out;
-    }
-
-    .hamburger-icon-gradient {
-        filter: brightness(0) saturate(100%) invert(73%) sepia(87%) saturate(421%) hue-rotate(288deg) brightness(105%) contrast(89%);
-        opacity: 0;
-        transition: opacity 0.5s ease-in-out, transform 0.3s ease-in-out;
-        pointer-events: none;
-    }
-
-    .gradient-icon-button:hover .hamburger-icon-gradient {
-        opacity: 1;
-    }
-
-    .brand-group {
-        transition: all 0.5s ease-in-out;
-    }
-
-    .brand-group:hover .logo-circle {
-        background: linear-gradient(to right, #f9a8d4, #f472b6, #ec4899) !important;
-        transition: background 0.5s ease-in-out;
-    }
-
-    .brand-group:hover .gradient-text {
-        -webkit-text-fill-color: transparent;
-        transition: -webkit-text-fill-color 0.5s ease-in-out;
-    }
-
-    .logo-circle {
-        transition: background 0.5s ease-in-out;
-    }
+	@keyframes buzzing-colors {
+		0% {
+			background-position: 0% 50%;
+		}
+		100% {
+			background-position: 200% 50%;
+		}
+	}
 </style>

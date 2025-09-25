@@ -1,428 +1,284 @@
 <script lang="ts">
-import { onDestroy, onMount } from "svelte";
-import { slide, fade } from "svelte/transition";
-import { quintOut, cubicOut } from "svelte/easing";
+import { onMount } from "svelte";
+import { animations, initGSAP } from "$lib/animations";
+import LazyImage from "$lib/components/LazyImage.svelte";
 import PlayerCard from "$lib/components/PlayerCard.svelte";
-import HeroTitle from "$lib/components/HeroTitle.svelte";
-import HeroTitleAccent from "$lib/components/HeroTitleAccent.svelte";
-import type { Player, CardPosition } from "$lib/types.js";
+import LockIcon from "$lib/components/LockIcon.svelte";
 
-// Mouse tracking for cursor-following background
-let mouseX = $state(0);
-let mouseY = $state(0);
-let targetX = $state(0);
-let targetY = $state(0);
-
-function handleMouseMove(event: MouseEvent) {
-	targetX = event.clientX;
-	targetY = event.clientY;
-}
-
-// Smooth animation loop
-function animate() {
-	mouseX += (targetX - mouseX) * 0.1;
-	mouseY += (targetY - mouseY) * 0.1;
-	requestAnimationFrame(animate);
-}
-
-// Start animation on mount
-if (typeof window !== "undefined") {
-	animate();
-}
-
-let currentPlayer = $state(0);
-let isTransitioning = $state(false);
-let carouselInterval: ReturnType<typeof setInterval> | undefined;
-
-const players: Player[] = [
+// Player data
+const players = [
 	{
-		image: "/Barbora-Votikova.png",
-		name: "Barbora Votíková",
-		club: "SK Slavia Praha",
-		position: "GK",
-		nationality: "Německo",
-		goals: 24,
-		assists: 8,
-	},
-	{
-		image: "/Jana-Zufankova.png",
-		name: "Jana Žufánková",
-		club: "SK Slavia Praha",
-		position: "CM",
-		nationality: "Španělsko",
-		goals: 18,
-		assists: 15,
-	},
-	{
-		image: "/Antonie-Starova.png",
-		name: "Antonie Stárová",
-		club: "AC Sparta Praha",
-		position: "LW",
-		nationality: "Česko",
-		goals: 12,
-		assists: 11,
-	},
-	{
+		name: "Kristýna",
+		surname: "Růžičková",
 		image: "/Kristyna-Ruzickova.png",
-		name: "Kristýna Růžičková",
-		club: "SK Slavia Praha",
-		position: "CB",
-		nationality: "Nizozemsko",
-		goals: 3,
-		assists: 7,
+		position: "CM",
+		team: "SK Slavia Praha",
 	},
 	{
+		name: "Tamara",
+		surname: "Morávková",
 		image: "/Tamara-Moravkova.png",
-		name: "Tamara Morávková",
-		club: "SK Slavia Praha",
 		position: "CB",
-		nationality: "Česká republika",
-		goals: 0,
-		assists: 0,
+		team: "AC Sparta Praha",
 	},
 	{
+		name: "Jana",
+		surname: "Žufanková",
+		image: "/Jana-Zufankova.png",
+		position: "ST",
+		team: "FC Baník Ostrava",
+	},
+	{
+		name: "Kamila",
+		surname: "Dubcová",
+		image: "/Kamila-Dubcova.png",
+		position: "GK",
+		team: "SK Slavia Praha",
+	},
+	{
+		name: "Vanesa",
+		surname: "Jílková",
 		image: "/Vanesa-Jilkova.png",
-		name: "Vanesa Jílková",
-		club: "SK Slavia Praha",
-		position: "RM",
-		nationality: "Německo",
-		goals: 14,
-		assists: 9,
+		position: "CDM",
+		team: "AC Sparta Praha",
+	},
+	{
+		name: "Barbora",
+		surname: "Votíková",
+		image: "/Barbora-Votikova.png",
+		position: "LW",
+		team: "FC Baník Ostrava",
+	},
+	{
+		name: "Antonie",
+		surname: "Starová",
+		image: "/Antonie-Starova.png",
+		position: "RB",
+		team: "SK Slavia Praha",
 	},
 ];
 
-function nextPlayer() {
-	currentPlayer = (currentPlayer + 1) % players.length;
+// Duplicate players for seamless loop
+const duplicatedPlayers = [...players, ...players];
+
+let gsap: any = null;
+let scrollTween: any = null;
+
+// Scroll animation states for collage
+let imageSection1: HTMLElement;
+let imageSection2: HTMLElement;
+let imageSection3: HTMLElement;
+let textOverlay1: HTMLElement;
+let textOverlay2: HTMLElement;
+let textOverlay3: HTMLElement;
+let collageTimeline: any = null;
+
+function startCarouselAnimation() {
+	if (!gsap) return;
+
+	const carousel = document.querySelector(".carousel-track");
+	if (!carousel) return;
+
+	// Create infinite scroll animation
+	scrollTween = gsap.to(carousel, {
+		x: -1680, // Width of 7 cards (240px each + 24px gap)
+		duration: 20,
+		ease: "none",
+		repeat: -1,
+		onRepeat: () => {
+			gsap.set(carousel, { x: 0 });
+		},
+	});
 }
 
-function goToPlayer(index: number) {
-	previousPlayer = currentPlayer;
-	// Calculate shortest path direction
-	const totalPlayers = players.length;
-	const diff = index - currentPlayer;
-	const wrappedDiff = ((diff + totalPlayers) % totalPlayers);
-
-	if (wrappedDiff <= totalPlayers / 2) {
-		direction = wrappedDiff > 0 ? 1 : 0;
-	} else {
-		direction = -1;
-	}
-
-	currentPlayer = index;
-	resetCarouselTimer();
-}
-
-function startCarouselTimer() {
-	carouselInterval = setInterval(nextPlayer, 4000);
-}
-
-function resetCarouselTimer() {
-	if (carouselInterval) {
-		clearInterval(carouselInterval);
-	}
-	startCarouselTimer();
-}
-
-function previousPlayerNav() {
-	previousPlayer = currentPlayer;
-	currentPlayer = (currentPlayer - 1 + players.length) % players.length;
-	direction = -1;
-	resetCarouselTimer();
-}
-
-function nextPlayerNav() {
-	goToPlayer((currentPlayer + 1) % players.length);
-	resetCarouselTimer();
-}
-
-function handleKeydown(event: KeyboardEvent) {
-	switch (event.key) {
-		case "ArrowLeft":
-			event.preventDefault();
-			previousPlayerNav();
-			break;
-		case "ArrowRight":
-			event.preventDefault();
-			nextPlayerNav();
-			break;
-		case "Home":
-			event.preventDefault();
-			goToPlayer(0);
-			resetCarouselTimer();
-			break;
-		case "End":
-			event.preventDefault();
-			goToPlayer(players.length - 1);
-			resetCarouselTimer();
-			break;
-		case " ":
-		case "Enter":
-			event.preventDefault();
-			resetCarouselTimer();
-			break;
+function pauseCarousel() {
+	if (scrollTween) {
+		scrollTween.pause();
 	}
 }
 
-// Responsive screen size tracking
-let screenSize = $state('desktop'); // 'mobile', 'tablet', 'desktop'
+function resumeCarousel() {
+	if (scrollTween) {
+		scrollTween.resume();
+	}
+}
 
-function updateScreenSize() {
-	if (typeof window !== 'undefined') {
-		const width = window.innerWidth;
-		if (width < 768) {
-			screenSize = 'mobile';
-		} else if (width < 1024) {
-			screenSize = 'tablet';
-		} else {
-			screenSize = 'desktop';
+onMount(async () => {
+	// Defer all animations until after critical page load
+	setTimeout(async () => {
+		try {
+			await initGSAP();
+
+			// Import GSAP here for carousel with error handling
+			const gsapModule = await import("gsap");
+			gsap = gsapModule.gsap;
+
+			// Stagger animation initialization for better performance
+			// Hero title is now visible from start - no animation needed
+
+			// CTA button is now visible from start - no animation needed
+
+			// Player carousel is now visible from start - no animation needed
+
+			// Start carousel after all critical animations
+			setTimeout(() => {
+				startCarouselAnimation();
+			}, 1500);
+
+			// Defer scroll-based animations until user interaction
+			setTimeout(() => {
+				animations.staggerFadeInUp(".feature-card");
+				animations.scaleOnScroll(".stats-section");
+				animations.parallax(".parallax-bg", { distance: -200 });
+			}, 2000);
+		} catch (error) {
+			console.warn("Failed to initialize animations:", error);
 		}
-	}
-}
+	}, 200); // Defer by 200ms to allow critical rendering
 
-// Get visible players - always show 5 cards on all screen sizes
-const visiblePlayers = $derived.by(() => {
-	const visible: Array<{player: Player, index: number, position: CardPosition}> = [];
-	const totalPlayers = players.length;
+	// Initialize GSAP scroll animations for collage
+	setTimeout(() => {
+		if (!gsap) return;
 
-	// Always show 5 cards (far-left, left, center, right, far-right)
-	const farLeftIndex = (currentPlayer - 2 + totalPlayers) % totalPlayers;
-	visible.push({
-		player: players[farLeftIndex],
-		index: farLeftIndex,
-		position: "far-left",
-	});
+		// Create master timeline for collage animations
+		collageTimeline = gsap.timeline({ paused: true });
 
-	const leftIndex = (currentPlayer - 1 + totalPlayers) % totalPlayers;
-	visible.push({
-		player: players[leftIndex],
-		index: leftIndex,
-		position: "left",
-	});
+		// Set initial states for text overlays
+		if (textOverlay1) gsap.set(textOverlay1, { opacity: 0, scale: 0.9 });
+		if (textOverlay2) gsap.set(textOverlay2, { opacity: 0, scale: 0.9 });
+		if (textOverlay3) gsap.set(textOverlay3, { opacity: 0, scale: 0.9 });
 
-	// Center card (main)
-	visible.push({
-		player: players[currentPlayer],
-		index: currentPlayer,
-		position: "center",
-	});
+		// Intersection Observer with GSAP animations
+		const observerOptions = {
+			root: null,
+			rootMargin: "0px",
+			threshold: 0.5, // Trigger when 50% of element is in view
+		};
 
-	const rightIndex = (currentPlayer + 1) % totalPlayers;
-	visible.push({
-		player: players[rightIndex],
-		index: rightIndex,
-		position: "right",
-	});
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					// Animate in with GSAP
+					if (entry.target === imageSection1 && textOverlay1) {
+						gsap.to(textOverlay1, {
+							opacity: 1,
+							scale: 1,
+							duration: 0.8,
+							ease: "power2.out",
+						});
+					} else if (entry.target === imageSection2 && textOverlay2) {
+						gsap.to(textOverlay2, {
+							opacity: 1,
+							scale: 1,
+							duration: 0.8,
+							ease: "power2.out",
+						});
+					} else if (entry.target === imageSection3 && textOverlay3) {
+						gsap.to(textOverlay3, {
+							opacity: 1,
+							scale: 1,
+							duration: 0.8,
+							ease: "power2.out",
+						});
+					}
+				} else {
+					// Animate out with GSAP
+					if (entry.target === imageSection1 && textOverlay1) {
+						gsap.to(textOverlay1, {
+							opacity: 0,
+							scale: 0.9,
+							duration: 0.5,
+							ease: "power2.in",
+						});
+					} else if (entry.target === imageSection2 && textOverlay2) {
+						gsap.to(textOverlay2, {
+							opacity: 0,
+							scale: 0.9,
+							duration: 0.5,
+							ease: "power2.in",
+						});
+					} else if (entry.target === imageSection3 && textOverlay3) {
+						gsap.to(textOverlay3, {
+							opacity: 0,
+							scale: 0.9,
+							duration: 0.5,
+							ease: "power2.in",
+						});
+					}
+				}
+			});
+		}, observerOptions);
 
-	const farRightIndex = (currentPlayer + 2) % totalPlayers;
-	visible.push({
-		player: players[farRightIndex],
-		index: farRightIndex,
-		position: "far-right",
-	});
+		// Observe all image sections
+		if (imageSection1) observer.observe(imageSection1);
+		if (imageSection2) observer.observe(imageSection2);
+		if (imageSection3) observer.observe(imageSection3);
 
-	return visible;
-});
-
-onMount(() => {
-	startCarouselTimer();
-	updateScreenSize(); // Initial screen size check
-	if (typeof window !== "undefined") {
-		window.addEventListener("keydown", handleKeydown);
-		window.addEventListener("resize", updateScreenSize);
-	}
-});
-
-onDestroy(() => {
-	if (carouselInterval) {
-		clearInterval(carouselInterval);
-	}
-	if (typeof window !== "undefined") {
-		window.removeEventListener("keydown", handleKeydown);
-		window.removeEventListener("resize", updateScreenSize);
-	}
+		// Store cleanup function
+		return () => {
+			observer.disconnect();
+			if (collageTimeline) collageTimeline.kill();
+		};
+	}, 500); // Wait for GSAP to be loaded
 });
 </script>
 
-<style>
-@keyframes float {
-	0%, 100% { transform: translateY(0px) rotate(0deg); }
-	33% { transform: translateY(-8px) rotate(1deg); }
-	66% { transform: translateY(4px) rotate(-0.5deg); }
-}
-
-@keyframes breathe {
-	0%, 100% { transform: scale(1); }
-	50% { transform: scale(1.02); }
-}
-
-.animate-float {
-	animation: float 6s ease-in-out infinite;
-}
-
-.animate-breathe {
-	animation: breathe 3s ease-in-out infinite;
-}
-
-
-
-
-
-/* Hero Grid Layout */
-.hero-wrapper {
-	position: relative;
-	margin-bottom: 0;
-}
-
-.hero-background {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	pointer-events: none;
-}
-
-.hero-grid-container {
-	display: grid;
-	z-index: 20;
-	margin: 0;
-	padding: 0;
-}
-
-
-
-	/* Side image pseudo-elements for desktop */
-	.hero-grid-container::before {
-		content: '';
-		position: absolute;
-		left: 0;
-		top: 40%;
-		width: 600px;
-		height: 600px;
-		/*background: url('/RuzickovaBg.png') no-repeat center;*/
-		background-size: contain;
-		transform: translateX(-35%);
-		z-index: 10;
-		pointer-events: none;
-	}
-
-	.hero-grid-container::after {
-		content: '';
-		position: absolute;
-		right: 0;
-		top: 40%;
-		width: 600px;
-		height: 600px;
-		/*background: url('/KoptovaBg.png') no-repeat center;*/
-		background-size: contain;
-		transform: translateX(25%);
-		z-index: 10;
-		pointer-events: none;
-	}
-
-/* Remaining CSS classes that are still needed for complex responsive grid layouts */
-</style>
-
-
-
-<!-- NEW GRID-BASED HERO SECTION -->
-<div
-	class="w-full h-screen pt-20 pb-8 relative flex items-center"
-	onmousemove={handleMouseMove}
-	role="application"
-	style="background:
-		radial-gradient(800px circle at {mouseX}px {mouseY}px, rgba(58, 9, 110, 0.4), transparent 70%),
-		radial-gradient(600px circle at {mouseX + 200}px {mouseY + 100}px, rgba(58, 9, 110, 0.3), transparent 70%),
-		radial-gradient(1000px circle at {mouseX - 150}px {mouseY - 100}px, rgba(58, 9, 110, 0.2), transparent 70%),
-		linear-gradient(135deg, #3a096e 0%, #1e0b40 50%, #000000 100%)"
->
-
-	<!-- Background images positioned at the sides -->
-	<div class="absolute -left-62 w-[500px] h-[500px] z-10 pointer-events-none lg:w-[1200px] lg:h-[1200px] lg:-left-96 lg:top-[40%] hidden" style="bottom: 200px;">
-		<img src="/RuzickovaBg.png" alt="" class="w-full h-full object-contain" />
-	</div>
-	<div class="absolute -right-52 w-[500px] h-[500px] z-10 pointer-events-none lg:w-[1200px] lg:h-[1200px] lg:-right-96 lg:top-[40%] hidden" style="bottom: 200px;">
-		<img src="/KoptovaBg.png" alt="" class="w-full h-full object-contain" />
-	</div>
-
-	<!-- Grid container for content -->
-	<div class="hero-grid-container relative text-white grid m-0 p-0 z-20 gap-0 w-full flex-1
-		grid-cols-1 [grid-template-areas:'hero-text''cta-button''player-cards''new-section''logos'] [grid-template-rows:auto_auto_auto_auto_auto] justify-center items-center">
-		<!-- Hero text section -->
-		<div class="[grid-area:hero-text]">
-			<div class="flex flex-col items-center justify-center relative -space-y-11">
-				<HeroTitle text="OBJEVTE" />
-				<div class="animate-breathe relative z-26">
-					<HeroTitleAccent text="ŽENSKÝ" />
-				</div>
-				<div class="-mt-1">
-					<HeroTitle text="FOTBAL" />
-				</div>
+<!-- Hero Section -->
+<section class="relative h-screen box-border flex items-start justify-center overflow-hidden pt-17 md:pt-24">
+	<!-- Hero Content -->
+	<div class="relative z-40 text-center text-white px-4 max-w-6xl mx-auto">
+		<h1 class="font-test hero-title text-[5rem] md:text-8xl lg:text-9xl font-medium opacity-100 leading-loose tracking-wider relative">
+			<div class="text-white" style="text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; transform: rotateX(20deg);">OBJEVTE</div>
+			<div class="text-white" style="text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; transform: translateY(-0.5rem) rotateX(-20deg);">FOTBAL</div>
+			<div class="absolute inset-0 flex items-center justify-center z-10 text-[5.5rem] md:text-[6.5rem] lg:text-[8.5rem]">
+				<div class="relative bg-gradient-to-r from-pink-500 via-pink-400 via-rose-400 via-pink-300 to-pink-500 bg-clip-text text-transparent" style="text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; font-feature-settings: 'kern' 1, 'liga' 1; line-height: 1.5;">&nbsp;ŽENSKÝ&nbsp;</div>
 			</div>
+		</h1>
+
+		<!-- <div class="hero-cta opacity-100 flex justify-center mb-20">
+			<button class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 px-12 py-6 md:px-16 md:py-8 rounded-lg md:rounded-2xl text-xl md:text-3xl font-semibold md:font-bold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-2xl hover:shadow-pink-500/25">
+				SPUSTIT
+			</button>
+		</div> -->
+
+		<div class="hero-cta opacity-100 flex justify-center mb-20">
+			<button class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 px-12 py-6 md:px-16 md:py-8 rounded-lg md:rounded-2xl text-xl md:text-3xl font-semibold md:font-bold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-2xl hover:shadow-gray-500/25 cursor-not-allowed" disabled>
+				<div class="flex items-center gap-3 md:gap-4">
+					<LockIcon size={24} color="white" class="md:w-8 md:h-8" />
+					<span>JIŽ BRZY</span>
+				</div>
+			</button>
 		</div>
-		<!-- CTA button section -->
-		<div class="[grid-area:cta-button]">
-			<div class="h-30 flex items-center justify-center relative">
-				<a
-					href="/hub"
-					class="inline-block py-4 px-12 bg-gray-500 text-white no-underline font-bold text-[clamp(1.2rem,2vw,1.5rem)] rounded-full tracking-widest shadow-[1px_1px_2px_rgba(0,0,0,0.3)] drop-shadow-[0_20px_25px_rgba(0,0,0,0.1)] cursor-default pointer-events-none"
-				>
-					JIŽ BRZY
-				</a>
-			</div>
-		</div>
-		<div class="[grid-area:player-cards] hidden">
-			<div class="h-[300px] flex items-center justify-center relative">
-				<div class="w-full h-[280px] flex items-center justify-center relative">
-					{#each visiblePlayers as { player, index, position } (position)}
-						<PlayerCard
-							{player}
-							{position}
-							onClick={() => goToPlayer(index)}
-						/>
+
+		<!-- Player Cards Carousel -->
+		<!-- <div class="player-carousel opacity-100 mb-12 relative z-20">
+			<div role="presentation" class="overflow-hidden" on:mouseenter={pauseCarousel} on:mouseleave={resumeCarousel}>
+				<div class="carousel-track flex gap-6 pb-4">
+					{#each duplicatedPlayers as player, index}
+						<PlayerCard {player} />
 					{/each}
 				</div>
 			</div>
-		</div>
+		</div> -->
 
-		<!-- New section -->
-		<div class="[grid-area:new-section] hidden">
-			<div class="h-40 flex items-center justify-center relative">
-				<div class="text-center">
-					<h3 class="text-2xl font-bold mb-4">New Section</h3>
-					<p class="text-lg opacity-80">Add your content here</p>
-				</div>
-			</div>
-		</div>
-
-		<!-- <div class="[grid-area:logos] bg-white z-30">
-			<div class="relative">
-				<div class="absolute top-2.5 left-2.5 text-xs opacity-70 z-30 text-gray-600 border-2 border-dashed border-black/30 px-2 py-1 bg-white/80">LOGOS AREA</div>
-				<div class="py-12 px-8">
-					<div class="text-center">
-						<!-- Traditional Brands -->
-						<!-- <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 tracking-wider">
-							TRADIČNÍ ZNAČKY
-						</h2>
-						<div class="flex justify-center gap-8 mb-16 flex-wrap">
-							<img src="/BanikLogo.png" alt="Baník" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
-							<img src="/SpartaLogo.png" alt="Sparta" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
-							<img src="/SlaviaLogo.png" alt="Slavia" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
-							<img src="/SlovanLogo.png" alt="Slovan" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
-						</div> -->
-
-						<!-- New Stories -->
-						<!-- <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 tracking-wider">
-							NOVÉ PŘÍBĚHY
-						</h2>
-						<div class="flex justify-center gap-8 mb-8 flex-wrap">
-							<img src="/RaptorsLogo.png" alt="Raptors" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
-							<img src="/LokomotivaLogo.png" alt="Lokomotiva" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
-							<img src="/PrahaLogo.png" alt="Praha" class="w-12 h-12 md:w-16 md:h-16 object-contain" />
-						</div>
-					</div> -->
-				<!-- </div>
-			</div> -->
-		<!-- </div> -->
 	</div>
-</div>
+
+	<!-- Player Images at Bottom -->
+	<div class="absolute bottom-0 left-0 right-0 pointer-events-none z-30">
+		<!-- Left Player - Consistent positioning across all breakpoints -->
+		<LazyImage
+			src="/RuzickovaBg.png"
+			alt="Ruzickova"
+			class="absolute bottom-0 lg:-bottom-20 left-0 h-[36rem] md:h-[44rem] lg:h-[46rem] xl:h-[48rem] w-auto object-cover opacity-80 transform -translate-x-50 md:-translate-x-45 lg:-translate-x-40"
+			threshold={0.1}
+		/>
+
+		<!-- Right Player - Consistent positioning across all breakpoints -->
+		<LazyImage
+			src="/BgBartonova.png"
+			alt="Bartonova"
+			class="absolute bottom-0 lg:-bottom-24 right-0 h-[36rem] md:h-[44rem] lg:h-[46rem] xl:h-[48rem] w-auto object-cover opacity-80 transform translate-x-12 md:translate-x-0 lg:-translate-x-10"
+			threshold={0.1}
+		/>
+	</div>
+</section>

@@ -1,20 +1,8 @@
-@import 'tailwindcss';
+@import url("https://fonts.googleapis.com/css2?family=Baloo+Paaji+2:wght@400..800&display=swap");
+@import "tailwindcss";
 
-@variant dark (:where(.dark) &);
-
-@font-face {
-	font-family: "SpaceMonoBold";
-	src: url("/fonts/SpaceMono-Bold.ttf") format("truetype");
-	font-display: swap;
-}
-
-/* Force single scroll context for homepage */
-html, body {
-	height: 100%;
-	overflow-x: hidden;
-}
-
-body {
-	margin: 0;
-	padding: 0;
+.font-test {
+	font-family: "Baloo Paaji 2", sans-serif;
+	letter-spacing: 4px;
+	font-weight: 700;
 }
